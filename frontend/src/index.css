@@ -13,3 +13,12 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Hanken Grotesk', sans-serif;
 }
+
+button, a {
+  transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease,
+    box-shadow 200ms ease, transform 200ms ease, opacity 200ms ease;
+}
+
+button:active {
+  transform: scale(0.97);
+}
