@@ -6,7 +6,7 @@ export default function CourseCard({ course }) {
   const { isFavorite, toggleFavorite } = useFavorites()
   const { getCourseProgressPercent } = useProgress()
   const favorite = isFavorite(course.id)
-  const percent = getCourseProgressPercent(course.id)
+  const percent = getCourseProgressPercent(course.id, course.lessons.length)
 
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-lg border border-border-light bg-surface-container-lowest shadow-level1 transition hover:-translate-y-0.5 hover:border-primary hover:shadow-level2">

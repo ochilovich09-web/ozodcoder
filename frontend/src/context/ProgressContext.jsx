@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { getCourseById } from '../data/courses'
 import { useAuth } from './AuthContext'
 import { fetchProgress, toggleLessonProgress } from '../api/user'
 
@@ -65,12 +64,11 @@ export function ProgressProvider({ children }) {
     return Boolean(courseProgress[lessonId])
   }
 
-  function getCourseProgressPercent(courseId) {
-    const course = getCourseById(courseId)
-    if (!course || course.lessons.length === 0) return 0
+  function getCourseProgressPercent(courseId, totalLessons) {
+    if (!totalLessons) return 0
     const courseProgress = progress[courseId] || {}
     const completed = Object.keys(courseProgress).length
-    return Math.round((completed / course.lessons.length) * 100)
+    return Math.round((completed / totalLessons) * 100)
   }
 
   return (

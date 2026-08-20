@@ -35,7 +35,7 @@ export default function Lesson() {
   const prevLesson = course.lessons[lessonIndex - 1]
   const nextLesson = course.lessons[lessonIndex + 1]
   const completed = isLessonComplete(course.id, lesson.id)
-  const percent = getCourseProgressPercent(course.id)
+  const percent = getCourseProgressPercent(course.id, course.lessons.length)
 
   return (
     <div className="mx-auto max-w-content px-4 py-8 md:px-8">

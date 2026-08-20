@@ -30,7 +30,7 @@ export default function CourseDetail() {
   if (notFound) return <Navigate to="/kurslar" replace />
   if (!course) return null
 
-  const percent = getCourseProgressPercent(course.id)
+  const percent = getCourseProgressPercent(course.id, course.lessons.length)
   const favorite = isFavorite(course.id)
   const firstLesson = course.lessons[0]
 
