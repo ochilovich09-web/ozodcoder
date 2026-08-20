@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { courses } from '../data/courses'
 import CourseCard from '../components/CourseCard'
+import { SparkleIcon, BadgeIcon, UnlockIcon, CodeIcon } from '../components/icons'
 
 const stats = [
   { value: '10k+', label: 'Faol Talabalar' },
@@ -11,14 +12,17 @@ const stats = [
 
 const whyUs = [
   {
+    icon: BadgeIcon,
     title: "Ekspert O'qituvchilar",
     text: "Haqiqiy sanoat tajribasiga ega mutaxassislardan to'g'ridan-to'g'ri o'rganing.",
   },
   {
+    icon: UnlockIcon,
     title: 'Amaliy Kirish',
     text: "Bir marta to'lov va konteyngga abadiy ega bo'ling, xohlagan vaqtda qayta ko'ring.",
   },
   {
+    icon: CodeIcon,
     title: 'Amaliy Loyihalar',
     text: "Nazariyani tashqariga chiqing, portfelingizni mustahkam funksional loyihalar bilan to'ldiring.",
   },
@@ -31,11 +35,19 @@ export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-background-subtle">
-        <div className="mx-auto grid max-w-content grid-cols-1 items-center gap-10 px-4 py-16 md:grid-cols-2 md:px-8 md:py-24">
+      <section className="relative overflow-hidden bg-background-subtle">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-primary-container/20 blur-3xl"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-32 bottom-0 h-72 w-72 rounded-full bg-secondary-container/15 blur-3xl"
+        />
+        <div className="relative mx-auto grid max-w-content grid-cols-1 items-center gap-10 px-4 py-16 md:grid-cols-2 md:px-8 md:py-24">
           <div>
-            <span className="mb-4 inline-block rounded-full bg-primary-container/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
-              Yangi kurslar qo'shildi
+            <span className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-primary-container/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
+              <SparkleIcon /> Yangi kurslar qo'shildi
             </span>
             <h1 className="font-display text-4xl font-bold leading-tight text-on-surface md:text-5xl">
               OzodCoder bilan <span className="text-primary">Texnologiyalar</span> Kelajagini
@@ -49,7 +61,7 @@ export default function Home() {
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
                 to="/kurslar"
-                className="rounded-md bg-primary px-6 py-3 text-sm font-semibold text-on-primary transition hover:bg-primary/90"
+                className="rounded-md bg-primary px-6 py-3 text-sm font-semibold text-on-primary shadow-level1 transition hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-level2"
               >
                 Boshlash →
               </Link>
@@ -61,12 +73,13 @@ export default function Home() {
               </Link>
             </div>
           </div>
-          <div className="overflow-hidden rounded-lg shadow-level2">
+          <div className="relative overflow-hidden rounded-xl border border-border-light shadow-level2">
             <img
               src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=1000&auto=format&fit=crop"
               alt="O'quvchi kompyuterda dars ko'rmoqda"
               className="h-full w-full object-cover"
             />
+            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/30 to-transparent" />
           </div>
         </div>
       </section>
@@ -121,8 +134,14 @@ export default function Home() {
           </h2>
           <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3">
             {whyUs.map((item) => (
-              <div key={item.title} className="rounded-lg bg-surface-container-lowest p-6 shadow-level1">
-                <h3 className="font-display text-lg font-semibold text-on-surface">
+              <div
+                key={item.title}
+                className="rounded-lg bg-surface-container-lowest p-6 text-left shadow-level1 transition hover:-translate-y-0.5 hover:shadow-level2"
+              >
+                <div className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-container/10 text-primary">
+                  <item.icon />
+                </div>
+                <h3 className="mt-4 font-display text-lg font-semibold text-on-surface">
                   {item.title}
                 </h3>
                 <p className="mt-2 text-sm text-on-surface-variant">{item.text}</p>

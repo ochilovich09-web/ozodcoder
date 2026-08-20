@@ -4,6 +4,7 @@ import { getCourseById as getLocalCourseById } from '../data/courses'
 import { fetchCourseById } from '../api/courses'
 import { useFavorites } from '../context/FavoritesContext'
 import { useProgress } from '../context/ProgressContext'
+import { StarIcon, UsersIcon, ClockIcon, TeacherIcon, HeartIcon, VideoIcon, InfinityIcon, CheckIcon } from '../components/icons'
 
 export default function CourseDetail() {
   const { courseId } = useParams()
@@ -47,13 +48,13 @@ export default function CourseDetail() {
           <p className="mt-3 text-on-surface-variant">{course.description}</p>
 
           <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-on-surface-variant">
-            <span>⭐ {course.rating} ({course.ratingCount} baholar)</span>
-            <span>👥 {course.students.toLocaleString()} o'quvchi</span>
-            <span>⏱ {course.duration}</span>
-            <span>🧑‍🏫 {course.instructor}</span>
+            <span className="flex items-center gap-1.5"><StarIcon className="text-warning-amber" /> {course.rating} ({course.ratingCount} baholar)</span>
+            <span className="flex items-center gap-1.5"><UsersIcon /> {course.students.toLocaleString()} o'quvchi</span>
+            <span className="flex items-center gap-1.5"><ClockIcon /> {course.duration}</span>
+            <span className="flex items-center gap-1.5"><TeacherIcon /> {course.instructor}</span>
           </div>
 
-          <div className="mt-8 overflow-hidden rounded-lg border border-border-light">
+          <div className="mt-8 overflow-hidden rounded-xl border border-border-light shadow-level2">
             <img src={course.thumbnail} alt={course.title} className="aspect-video w-full object-cover" />
           </div>
 
@@ -89,7 +90,7 @@ export default function CourseDetail() {
                             : 'bg-surface-container-high text-on-surface-variant'
                         }`}
                       >
-                        {isLessonComplete(course.id, lesson.id) ? '✓' : idx + 1}
+                        {isLessonComplete(course.id, lesson.id) ? <CheckIcon /> : idx + 1}
                       </span>
                       <span className="text-sm font-medium text-on-surface">{lesson.title}</span>
                     </span>
@@ -126,13 +127,14 @@ export default function CourseDetail() {
             onClick={() => toggleFavorite(course.id)}
             className="mt-3 flex w-full items-center justify-center gap-2 rounded-md border border-outline-variant px-4 py-3 text-sm font-semibold text-on-surface hover:bg-surface-container"
           >
-            {favorite ? '❤️ Sevimlilarda' : '🤍 Sevimlilarga qo\'shish'}
+            <HeartIcon filled={favorite} className={favorite ? 'text-error' : ''} />
+            {favorite ? 'Sevimlilarda' : 'Sevimlilarga qo\'shish'}
           </button>
 
           <ul className="mt-6 space-y-2 text-sm text-on-surface-variant">
-            <li>📹 {course.lessons.length} ta video dars</li>
-            <li>⏱ Jami {course.duration}</li>
-            <li>♾ To'liq umrbod kirish huquqi</li>
+            <li className="flex items-center gap-2"><VideoIcon /> {course.lessons.length} ta video dars</li>
+            <li className="flex items-center gap-2"><ClockIcon /> Jami {course.duration}</li>
+            <li className="flex items-center gap-2"><InfinityIcon /> To'liq umrbod kirish huquqi</li>
           </ul>
         </aside>
       </div>

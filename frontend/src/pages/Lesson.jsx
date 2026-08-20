@@ -3,6 +3,7 @@ import { Link, useParams, Navigate } from 'react-router-dom'
 import { getCourseById as getLocalCourseById } from '../data/courses'
 import { fetchCourseById } from '../api/courses'
 import { useProgress } from '../context/ProgressContext'
+import { CheckIcon } from '../components/icons'
 
 export default function Lesson() {
   const { courseId, lessonId } = useParams()
@@ -48,7 +49,7 @@ export default function Lesson() {
         </span>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-border-light bg-black shadow-level2">
+      <div className="overflow-hidden rounded-xl border border-border-light bg-black shadow-level2">
         <div className="aspect-video w-full">
           <iframe
             className="h-full w-full"
@@ -67,13 +68,14 @@ export default function Lesson() {
         </div>
         <button
           onClick={() => toggleLessonComplete(course.id, lesson.id)}
-          className={`rounded-md px-5 py-2.5 text-sm font-semibold transition ${
+          className={`flex items-center gap-2 rounded-md px-5 py-2.5 text-sm font-semibold transition ${
             completed
               ? 'bg-success-emerald text-white'
               : 'border border-outline-variant text-on-surface hover:bg-surface-container'
           }`}
         >
-          {completed ? '✓ Tugallandi' : "Tugallandi deb belgilash"}
+          {completed && <CheckIcon />}
+          {completed ? 'Tugallandi' : "Tugallandi deb belgilash"}
         </button>
       </div>
 

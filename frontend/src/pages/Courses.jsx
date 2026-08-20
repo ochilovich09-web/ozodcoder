@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { courses as localCourses, categories } from '../data/courses'
 import { fetchCourses } from '../api/courses'
 import CourseCard from '../components/CourseCard'
+import { WarningIcon } from '../components/icons'
 
 export default function Courses() {
   const [activeCategory, setActiveCategory] = useState('Barchasi')
@@ -36,8 +37,8 @@ export default function Courses() {
           Kategoriya bo'yicha filtrlang yoki kurs nomi bo'yicha qidiring.
         </p>
         {!usingLiveData && (
-          <p className="mt-2 text-xs text-warning-amber">
-            ⚠ Backend serverga ulanilmadi — namuna ma'lumotlar ko'rsatilmoqda.
+          <p className="mt-2 flex items-center gap-1.5 text-xs text-warning-amber">
+            <WarningIcon /> Backend serverga ulanilmadi — namuna ma'lumotlar ko'rsatilmoqda.
           </p>
         )}
       </div>

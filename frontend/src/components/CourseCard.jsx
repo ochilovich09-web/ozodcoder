@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useFavorites } from '../context/FavoritesContext'
 import { useProgress } from '../context/ProgressContext'
+import { HeartIcon, StarIcon } from './icons'
 
 export default function CourseCard({ course }) {
   const { isFavorite, toggleFavorite } = useFavorites()
@@ -26,9 +27,11 @@ export default function CourseCard({ course }) {
       <button
         onClick={() => toggleFavorite(course.id)}
         aria-label="Sevimlilarga qo'shish"
-        className="absolute left-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-surface-container-lowest/90 text-lg"
+        className={`absolute left-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-surface-container-lowest/90 shadow-level1 transition hover:scale-105 ${
+          favorite ? 'text-error' : 'text-on-surface-variant'
+        }`}
       >
-        {favorite ? '❤️' : '🤍'}
+        <HeartIcon filled={favorite} />
       </button>
 
       <div className="flex flex-1 flex-col gap-2 p-4">
@@ -40,6 +43,13 @@ export default function CourseCard({ course }) {
             {course.title}
           </h3>
         </Link>
+        {course.rating > 0 && (
+          <div className="flex items-center gap-1 text-xs text-on-surface-variant">
+            <StarIcon className="text-warning-amber" />
+            <span className="font-medium text-on-surface">{course.rating}</span>
+            <span>({course.ratingCount})</span>
+          </div>
+        )}
         <p className="line-clamp-2 text-sm text-on-surface-variant">{course.description}</p>
 
         <div className="mt-auto flex items-center justify-between pt-3">
