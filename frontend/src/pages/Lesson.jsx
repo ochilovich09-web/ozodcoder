@@ -7,17 +7,25 @@ import { useProgress } from '../context/ProgressContext'
 export default function Lesson() {
   const { courseId, lessonId } = useParams()
   const [course, setCourse] = useState(() => getLocalCourseById(courseId))
+  const [notFound, setNotFound] = useState(false)
   const { isLessonComplete, toggleLessonComplete, getCourseProgressPercent } = useProgress()
 
   useEffect(() => {
+    setNotFound(false)
     fetchCourseById(courseId)
       .then((data) => setCourse(data))
       .catch(() => {
-        setCourse(getLocalCourseById(courseId))
+        const local = getLocalCourseById(courseId)
+        if (local) {
+          setCourse(local)
+        } else {
+          setNotFound(true)
+        }
       })
   }, [courseId])
 
-  if (!course) return <Navigate to="/kurslar" replace />
+  if (notFound) return <Navigate to="/kurslar" replace />
+  if (!course) return null
 
   const lessonIndex = course.lessons.findIndex((l) => l.id === lessonId)
   const lesson = course.lessons[lessonIndex]
