@@ -110,12 +110,18 @@ export default function CourseDetail() {
               </span>
             )}
           </div>
-          <Link
-            to={`/kurslar/${course.id}/darslar/${firstLesson ? firstLesson.id : ''}`}
-            className="mt-4 block rounded-md bg-primary px-4 py-3 text-center text-sm font-semibold text-on-primary hover:bg-primary/90"
-          >
-            Hozir Yozilish
-          </Link>
+          {firstLesson ? (
+            <Link
+              to={`/kurslar/${course.id}/darslar/${firstLesson.id}`}
+              className="mt-4 block rounded-md bg-primary px-4 py-3 text-center text-sm font-semibold text-on-primary hover:bg-primary/90"
+            >
+              Hozir Yozilish
+            </Link>
+          ) : (
+            <p className="mt-4 rounded-md border border-outline-variant px-4 py-3 text-center text-sm text-on-surface-variant">
+              Darslar hali qo'shilmagan
+            </p>
+          )}
           <button
             onClick={() => toggleFavorite(course.id)}
             className="mt-3 flex w-full items-center justify-center gap-2 rounded-md border border-outline-variant px-4 py-3 text-sm font-semibold text-on-surface hover:bg-surface-container"
