@@ -24,46 +24,42 @@ export default function Login() {
   }
 
   return (
-    <div className="mx-auto flex max-w-md flex-col px-4 py-16 md:px-0">
-      <h1 className="font-display text-2xl font-bold text-on-surface">Kirish</h1>
-      <p className="mt-1 text-sm text-on-surface-variant">Hisobingizga kiring</p>
+    <div className="auth-page">
+      <h1 className="auth-title">Kirish</h1>
+      <p className="auth-subtitle">Hisobingizga kiring</p>
 
-      <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
-        <div>
-          <label className="mb-1 block text-sm font-medium text-on-surface">Email</label>
+      <form onSubmit={handleSubmit} className="auth-form">
+        <div className="field-group">
+          <label>Email</label>
           <input
             type="email"
             required
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
-            className="w-full rounded-md border border-outline-variant bg-surface-container-lowest px-3 py-2 text-sm focus:border-primary focus:outline-none"
+            className="field"
           />
         </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-on-surface">Parol</label>
+        <div className="field-group">
+          <label>Parol</label>
           <input
             type="password"
             required
             value={form.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
-            className="w-full rounded-md border border-outline-variant bg-surface-container-lowest px-3 py-2 text-sm focus:border-primary focus:outline-none"
+            className="field"
           />
         </div>
 
-        {error && <p className="text-sm text-error">{error}</p>}
+        {error && <p className="error-text">{error}</p>}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary hover:bg-primary/90 disabled:opacity-60"
-        >
+        <button type="submit" disabled={loading} className="btn btn-primary">
           {loading ? 'Kirilmoqda...' : 'Kirish'}
         </button>
       </form>
 
-      <p className="mt-4 text-center text-sm text-on-surface-variant">
+      <p className="auth-footer">
         Hisobingiz yo'qmi?{' '}
-        <Link to="/royxatdan-otish" className="font-medium text-primary hover:underline">
+        <Link to="/royxatdan-otish" className="link-primary">
           Ro'yxatdan o'ting
         </Link>
       </p>

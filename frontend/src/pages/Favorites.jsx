@@ -25,19 +25,19 @@ export default function Favorites() {
   const favoriteCourses = allCourses.filter((c) => favorites.includes(c.id))
 
   return (
-    <div className="mx-auto max-w-content px-4 py-12 md:px-8">
-      <h1 className="font-display text-3xl font-bold text-on-surface">Sevimli Kurslar</h1>
-      <p className="mt-2 text-on-surface-variant">Siz belgilagan sevimli kurslar shu yerda.</p>
+    <div className="container" style={{ paddingTop: 48, paddingBottom: 48 }}>
+      <h1 className="page-title">Sevimli Kurslar</h1>
+      <p className="page-subtitle">Siz belgilagan sevimli kurslar shu yerda.</p>
 
       {favoriteCourses.length === 0 ? (
-        <div className="mt-10 rounded-lg border border-dashed border-outline-variant py-16 text-center">
-          <p className="text-on-surface-variant">Hali sevimli kurslar yo'q.</p>
-          <Link to="/kurslar" className="mt-3 inline-block text-sm font-medium text-primary hover:underline">
+        <div className="favorites-empty">
+          <p className="text-muted">Hali sevimli kurslar yo'q.</p>
+          <Link to="/kurslar" className="link-primary" style={{ marginTop: 12, display: 'inline-block' }}>
             Kurslarni ko'rish →
           </Link>
         </div>
       ) : (
-        <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="course-grid course-grid--3" style={{ marginTop: 32 }}>
           {favoriteCourses.map((course) => (
             <CourseCard key={course.id} course={course} />
           ))}

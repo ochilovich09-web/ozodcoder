@@ -23,10 +23,10 @@ function ScrollToTop() {
 
 export default function App() {
   return (
-    <div className="flex min-h-screen flex-col bg-surface">
+    <div className="app">
       <ScrollToTop />
       <Navbar />
-      <main className="flex-1">
+      <main className="app__main">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/kurslar" element={<Courses />} />

@@ -35,116 +35,89 @@ export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-background-subtle">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-primary-container/20 blur-3xl"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -left-32 bottom-0 h-72 w-72 rounded-full bg-secondary-container/15 blur-3xl"
-        />
-        <div className="relative mx-auto grid max-w-content grid-cols-1 items-center gap-10 px-4 py-16 md:grid-cols-2 md:px-8 md:py-24">
+      <section className="hero">
+        <div aria-hidden className="hero__blob hero__blob--one" />
+        <div aria-hidden className="hero__blob hero__blob--two" />
+        <div className="container hero__grid">
           <div>
-            <span className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-primary-container/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
+            <span className="hero__badge">
               <SparkleIcon /> Yangi kurslar qo'shildi
             </span>
-            <h1 className="font-display text-4xl font-bold leading-tight text-on-surface md:text-5xl">
-              OzodCoder bilan <span className="text-primary">Texnologiyalar</span> Kelajagini
+            <h1 className="hero__title">
+              OzodCoder bilan <span className="hero__title-accent">Texnologiyalar</span> Kelajagini
               O'zlashtiring
             </h1>
-            <p className="mt-4 max-w-md text-base text-on-surface-variant">
+            <p className="hero__text">
               Sanoatning yetakchi onlayn kurslari bilan malakangizni oshiring. Haqiqiy loyihalar
               yaratib, mutaxassislardan o'rganing va kompaniyalar qidirayotgan dasturchiga
               aylaning.
             </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link
-                to="/kurslar"
-                className="rounded-md bg-primary px-6 py-3 text-sm font-semibold text-on-primary shadow-level1 transition hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-level2"
-              >
+            <div className="hero__actions">
+              <Link to="/kurslar" className="btn btn-primary">
                 Boshlash →
               </Link>
-              <Link
-                to={`/kurslar/${featured.id}`}
-                className="rounded-md border border-outline-variant bg-surface-container-lowest px-6 py-3 text-sm font-semibold text-on-surface transition hover:bg-surface-container"
-              >
+              <Link to={`/kurslar/${featured.id}`} className="btn btn-outline">
                 Dasturni Ko'rish
               </Link>
             </div>
           </div>
-          <div className="relative overflow-hidden rounded-xl border border-border-light shadow-level2">
+          <div className="hero__image-frame">
             <img
               src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=1000&auto=format&fit=crop"
               alt="O'quvchi kompyuterda dars ko'rmoqda"
-              className="h-full w-full object-cover"
             />
-            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/30 to-transparent" />
+            <div className="hero__image-shade" />
           </div>
         </div>
       </section>
 
       {/* Stats */}
-      <section className="border-y border-border-light bg-surface-container-lowest">
-        <div className="mx-auto grid max-w-content grid-cols-2 gap-6 px-4 py-10 md:grid-cols-4 md:px-8">
+      <section className="stats">
+        <div className="container stats__grid">
           {stats.map((s) => (
-            <div key={s.label} className="text-center">
-              <div className="font-display text-2xl font-bold text-primary md:text-3xl">
-                {s.value}
-              </div>
-              <div className="mt-1 text-sm text-on-surface-variant">{s.label}</div>
+            <div key={s.label} className="stats__item">
+              <div className="stats__value">{s.value}</div>
+              <div className="stats__label">{s.label}</div>
             </div>
           ))}
         </div>
       </section>
 
       {/* Popular courses */}
-      <section className="mx-auto max-w-content px-4 py-16 md:px-8">
-        <div className="mb-8 text-center">
-          <h2 className="font-display text-3xl font-bold text-on-surface">
-            O'quv Dasturini O'rganing
-          </h2>
-          <p className="mt-2 text-on-surface-variant">
+      <section className="section container">
+        <div className="section-header">
+          <h2 className="section-title">O'quv Dasturini O'rganing</h2>
+          <p className="section-subtitle">
             Sanoatning yetakchi kurslari bilan zamonaviy dasturiy ta'minot ishlab chiqishni
             o'zlashtiring.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="course-grid course-grid--4">
           {popular.map((course) => (
             <CourseCard key={course.id} course={course} />
           ))}
         </div>
 
-        <div className="mt-10 text-center">
-          <Link
-            to="/kurslar"
-            className="rounded-md border border-outline-variant px-6 py-3 text-sm font-semibold text-on-surface hover:bg-surface-container"
-          >
+        <div className="section-footer">
+          <Link to="/kurslar" className="btn btn-outline">
             Barcha kurslarni ko'rish →
           </Link>
         </div>
       </section>
 
       {/* Why us */}
-      <section className="bg-surface-container-low">
-        <div className="mx-auto max-w-content px-4 py-16 text-center md:px-8">
-          <h2 className="font-display text-3xl font-bold text-on-surface">
-            Nima uchun OzodCoder ni tanlash kerak?
-          </h2>
-          <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3">
+      <section className="section--tint">
+        <div className="container section" style={{ textAlign: 'center' }}>
+          <h2 className="section-title">Nima uchun OzodCoder ni tanlash kerak?</h2>
+          <div className="why-grid">
             {whyUs.map((item) => (
-              <div
-                key={item.title}
-                className="rounded-lg bg-surface-container-lowest p-6 text-left shadow-level1 transition hover:-translate-y-0.5 hover:shadow-level2"
-              >
-                <div className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-container/10 text-primary">
+              <div key={item.title} className="why-card">
+                <div className="why-card__icon">
                   <item.icon />
                 </div>
-                <h3 className="mt-4 font-display text-lg font-semibold text-on-surface">
-                  {item.title}
-                </h3>
-                <p className="mt-2 text-sm text-on-surface-variant">{item.text}</p>
+                <h3 className="why-card__title">{item.title}</h3>
+                <p className="why-card__text">{item.text}</p>
               </div>
             ))}
           </div>
@@ -152,18 +125,13 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="bg-background-subtle">
-        <div className="mx-auto max-w-content px-4 py-16 text-center md:px-8">
-          <h2 className="font-display text-2xl font-bold text-on-surface md:text-3xl">
-            Dasturlash sayohatingizni bugun boshlang
-          </h2>
-          <p className="mx-auto mt-2 max-w-md text-on-surface-variant">
+      <section className="hero">
+        <div className="container section" style={{ textAlign: 'center' }}>
+          <h2 className="section-title">Dasturlash sayohatingizni bugun boshlang</h2>
+          <p className="section-subtitle" style={{ maxWidth: '28rem', margin: '8px auto 0' }}>
             10,000+ dasturchiga qo'shiling va o'z martabangizni keyingi bosqichga olib chiqing.
           </p>
-          <Link
-            to="/kurslar"
-            className="mt-6 inline-block rounded-md bg-primary px-6 py-3 text-sm font-semibold text-on-primary hover:bg-primary/90"
-          >
+          <Link to="/kurslar" className="btn btn-primary" style={{ marginTop: 24, display: 'inline-flex' }}>
             Kurslarni Ko'rish
           </Link>
         </div>

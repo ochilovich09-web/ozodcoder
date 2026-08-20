@@ -2,10 +2,10 @@ import { Link } from 'react-router-dom'
 
 export default function NotFound() {
   return (
-    <div className="mx-auto flex max-w-content flex-col items-center px-4 py-24 text-center">
-      <h1 className="font-display text-5xl font-bold text-primary">404</h1>
-      <p className="mt-3 text-on-surface-variant">Bu sahifa topilmadi.</p>
-      <Link to="/" className="mt-6 rounded-md bg-primary px-6 py-3 text-sm font-semibold text-on-primary">
+    <div className="not-found">
+      <h1 className="not-found__code">404</h1>
+      <p className="not-found__text">Bu sahifa topilmadi.</p>
+      <Link to="/" className="btn btn-primary" style={{ marginTop: 24 }}>
         Bosh sahifaga qaytish
       </Link>
     </div>

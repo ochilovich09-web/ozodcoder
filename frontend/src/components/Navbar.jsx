@@ -2,26 +2,21 @@ import { Link, NavLink } from 'react-router-dom'
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 
-const navLinkClass = ({ isActive }) =>
-  `text-sm font-medium transition-colors ${
-    isActive ? 'text-primary' : 'text-on-surface-variant hover:text-primary'
-  }`
+const navLinkClass = ({ isActive }) => `nav-link ${isActive ? 'nav-link--active' : ''}`
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const { isAuthenticated, user, logout } = useAuth()
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border-light bg-surface/90 backdrop-blur">
-      <div className="mx-auto flex max-w-content items-center justify-between px-4 py-4 md:px-8">
-        <Link to="/" className="flex items-center gap-2 font-display text-lg font-bold text-primary">
-          <span className="flex h-8 w-8 items-center justify-center rounded bg-primary text-on-primary">
-            O
-          </span>
+    <header className="navbar">
+      <div className="container navbar__row">
+        <Link to="/" className="navbar__logo">
+          <span className="navbar__logo-mark">O</span>
           OzodCoder
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="navbar__nav">
           <NavLink to="/kurslar" className={navLinkClass}>
             Kurslar
           </NavLink>
@@ -38,40 +33,27 @@ export default function Navbar() {
           )}
         </nav>
 
-        <div className="hidden items-center gap-4 md:flex">
+        <div className="navbar__actions">
           {isAuthenticated ? (
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-on-surface-variant">Salom, {user.name}</span>
-              <button
-                onClick={logout}
-                className="rounded-md border border-outline-variant px-4 py-2 text-sm font-medium text-on-surface hover:bg-surface-container"
-              >
+            <div className="navbar__user">
+              <span className="navbar__greeting">Salom, {user.name}</span>
+              <button onClick={logout} className="btn btn-outline btn-sm">
                 Chiqish
               </button>
             </div>
           ) : (
             <>
-              <Link
-                to="/kirish"
-                className="text-sm font-medium text-on-surface-variant hover:text-primary"
-              >
+              <Link to="/kirish" className="nav-link">
                 Kirish
               </Link>
-              <Link
-                to="/royxatdan-otish"
-                className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-on-primary transition hover:bg-primary/90"
-              >
+              <Link to="/royxatdan-otish" className="btn btn-primary btn-sm">
                 Boshlash
               </Link>
             </>
           )}
         </div>
 
-        <button
-          className="md:hidden"
-          onClick={() => setOpen((v) => !v)}
-          aria-label="Menyuni ochish"
-        >
+        <button className="navbar__toggle" onClick={() => setOpen((v) => !v)} aria-label="Menyuni ochish">
           <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
@@ -79,8 +61,8 @@ export default function Navbar() {
       </div>
 
       {open && (
-        <div className="border-t border-border-light bg-surface px-4 py-4 md:hidden">
-          <nav className="flex flex-col gap-4">
+        <div className="navbar__mobile">
+          <nav className="navbar__mobile-nav">
             <NavLink to="/kurslar" className={navLinkClass} onClick={() => setOpen(false)}>
               Kurslar
             </NavLink>
@@ -93,19 +75,15 @@ export default function Navbar() {
               </NavLink>
             )}
             {isAuthenticated ? (
-              <button onClick={logout} className="text-left text-sm font-medium text-on-surface">
+              <button onClick={logout} className="nav-link" style={{ textAlign: 'left' }}>
                 Chiqish ({user.name})
               </button>
             ) : (
               <>
-                <Link to="/kirish" className="text-sm font-medium" onClick={() => setOpen(false)}>
+                <Link to="/kirish" className="nav-link" onClick={() => setOpen(false)}>
                   Kirish
                 </Link>
-                <Link
-                  to="/royxatdan-otish"
-                  className="rounded-md bg-primary px-4 py-2 text-center text-sm font-medium text-on-primary"
-                  onClick={() => setOpen(false)}
-                >
+                <Link to="/royxatdan-otish" className="btn btn-primary" onClick={() => setOpen(false)}>
                   Boshlash
                 </Link>
               </>

@@ -36,108 +36,84 @@ export default function CourseDetail() {
   const firstLesson = course.lessons[0]
 
   return (
-    <div className="mx-auto max-w-content px-4 py-10 md:px-8">
-      <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <span className="text-xs font-semibold uppercase tracking-wide text-primary">
-            {course.category} · {course.level}
-          </span>
-          <h1 className="mt-2 font-display text-3xl font-bold text-on-surface md:text-4xl">
-            {course.title}
-          </h1>
-          <p className="mt-3 text-on-surface-variant">{course.description}</p>
+    <div className="container detail-grid">
+      <div>
+        <span className="detail-eyebrow">
+          {course.category} · {course.level}
+        </span>
+        <h1 className="detail-title">{course.title}</h1>
+        <p className="detail-desc">{course.description}</p>
 
-          <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-on-surface-variant">
-            <span className="flex items-center gap-1.5"><StarIcon className="text-warning-amber" /> {course.rating} ({course.ratingCount} baholar)</span>
-            <span className="flex items-center gap-1.5"><UsersIcon /> {course.students.toLocaleString()} o'quvchi</span>
-            <span className="flex items-center gap-1.5"><ClockIcon /> {course.duration}</span>
-            <span className="flex items-center gap-1.5"><TeacherIcon /> {course.instructor}</span>
-          </div>
-
-          <div className="mt-8 overflow-hidden rounded-xl border border-border-light shadow-level2">
-            <img src={course.thumbnail} alt={course.title} className="aspect-video w-full object-cover" />
-          </div>
-
-          {percent > 0 && (
-            <div className="mt-6">
-              <div className="mb-1 flex items-center justify-between text-sm">
-                <span className="font-medium text-on-surface">Progress</span>
-                <span className="text-on-surface-variant">{percent}%</span>
-              </div>
-              <div className="h-2 w-full overflow-hidden rounded-full bg-surface-container-high">
-                <div
-                  className="h-full rounded-full bg-secondary-container transition-all"
-                  style={{ width: `${percent}%` }}
-                />
-              </div>
-            </div>
-          )}
-
-          <div className="mt-10">
-            <h2 className="mb-4 font-display text-xl font-semibold text-on-surface">Syllabus</h2>
-            <ul className="divide-y divide-border-light rounded-lg border border-border-light">
-              {course.lessons.map((lesson, idx) => (
-                <li key={lesson.id}>
-                  <Link
-                    to={`/kurslar/${course.id}/darslar/${lesson.id}`}
-                    className="flex items-center justify-between px-4 py-3 hover:bg-surface-container-low"
-                  >
-                    <span className="flex items-center gap-3">
-                      <span
-                        className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold ${
-                          isLessonComplete(course.id, lesson.id)
-                            ? 'bg-success-emerald text-white'
-                            : 'bg-surface-container-high text-on-surface-variant'
-                        }`}
-                      >
-                        {isLessonComplete(course.id, lesson.id) ? <CheckIcon /> : idx + 1}
-                      </span>
-                      <span className="text-sm font-medium text-on-surface">{lesson.title}</span>
-                    </span>
-                    <span className="text-xs text-on-surface-variant">{lesson.duration}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+        <div className="detail-meta">
+          <span className="detail-meta__item"><StarIcon style={{ color: 'var(--color-warning)' }} /> {course.rating} ({course.ratingCount} baholar)</span>
+          <span className="detail-meta__item"><UsersIcon /> {course.students.toLocaleString()} o'quvchi</span>
+          <span className="detail-meta__item"><ClockIcon /> {course.duration}</span>
+          <span className="detail-meta__item"><TeacherIcon /> {course.instructor}</span>
         </div>
 
-        <aside className="h-fit rounded-lg border border-border-light bg-surface-container-lowest p-6 shadow-level1">
-          <div className="flex items-baseline gap-2">
-            <span className="font-display text-2xl font-bold text-primary">${course.price}</span>
-            {course.oldPrice && (
-              <span className="text-sm text-on-surface-variant line-through">
-                ${course.oldPrice}
-              </span>
-            )}
-          </div>
-          {firstLesson ? (
-            <Link
-              to={`/kurslar/${course.id}/darslar/${firstLesson.id}`}
-              className="mt-4 block rounded-md bg-primary px-4 py-3 text-center text-sm font-semibold text-on-primary hover:bg-primary/90"
-            >
-              Hozir Yozilish
-            </Link>
-          ) : (
-            <p className="mt-4 rounded-md border border-outline-variant px-4 py-3 text-center text-sm text-on-surface-variant">
-              Darslar hali qo'shilmagan
-            </p>
-          )}
-          <button
-            onClick={() => toggleFavorite(course.id)}
-            className="mt-3 flex w-full items-center justify-center gap-2 rounded-md border border-outline-variant px-4 py-3 text-sm font-semibold text-on-surface hover:bg-surface-container"
-          >
-            <HeartIcon filled={favorite} className={favorite ? 'text-error' : ''} />
-            {favorite ? 'Sevimlilarda' : 'Sevimlilarga qo\'shish'}
-          </button>
+        <div className="detail-image">
+          <img src={course.thumbnail} alt={course.title} />
+        </div>
 
-          <ul className="mt-6 space-y-2 text-sm text-on-surface-variant">
-            <li className="flex items-center gap-2"><VideoIcon /> {course.lessons.length} ta video dars</li>
-            <li className="flex items-center gap-2"><ClockIcon /> Jami {course.duration}</li>
-            <li className="flex items-center gap-2"><InfinityIcon /> To'liq umrbod kirish huquqi</li>
+        {percent > 0 && (
+          <div className="detail-progress">
+            <div className="detail-progress__row">
+              <span style={{ fontWeight: 500 }}>Progress</span>
+              <span className="text-muted">{percent}%</span>
+            </div>
+            <div className="progress-track progress-track--lg">
+              <div className="progress-fill" style={{ width: `${percent}%` }} />
+            </div>
+          </div>
+        )}
+
+        <div className="syllabus">
+          <h2 className="syllabus__title">Syllabus</h2>
+          <ul className="syllabus__list">
+            {course.lessons.map((lesson, idx) => (
+              <li key={lesson.id}>
+                <Link to={`/kurslar/${course.id}/darslar/${lesson.id}`} className="syllabus__link">
+                  <span className="syllabus__left">
+                    <span className={`syllabus__index ${isLessonComplete(course.id, lesson.id) ? 'syllabus__index--done' : ''}`}>
+                      {isLessonComplete(course.id, lesson.id) ? <CheckIcon /> : idx + 1}
+                    </span>
+                    <span className="syllabus__title-text">{lesson.title}</span>
+                  </span>
+                  <span className="syllabus__duration">{lesson.duration}</span>
+                </Link>
+              </li>
+            ))}
           </ul>
-        </aside>
+        </div>
       </div>
+
+      <aside className="detail-aside">
+        <div className="detail-price">
+          <span className="detail-price__current">${course.price}</span>
+          {course.oldPrice && <span className="detail-price__old">${course.oldPrice}</span>}
+        </div>
+        {firstLesson ? (
+          <Link to={`/kurslar/${course.id}/darslar/${firstLesson.id}`} className="btn btn-primary btn-block" style={{ marginTop: 16 }}>
+            Hozir Yozilish
+          </Link>
+        ) : (
+          <p className="detail-empty-lessons">Darslar hali qo'shilmagan</p>
+        )}
+        <button
+          onClick={() => toggleFavorite(course.id)}
+          className="btn btn-outline btn-block"
+          style={{ marginTop: 12, color: favorite ? 'var(--color-error)' : undefined }}
+        >
+          <HeartIcon filled={favorite} />
+          {favorite ? 'Sevimlilarda' : "Sevimlilarga qo'shish"}
+        </button>
+
+        <ul className="detail-facts">
+          <li><VideoIcon /> {course.lessons.length} ta video dars</li>
+          <li><ClockIcon /> Jami {course.duration}</li>
+          <li><InfinityIcon /> To'liq umrbod kirish huquqi</li>
+        </ul>
+      </aside>
     </div>
   )
 }
