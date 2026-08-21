@@ -18,6 +18,7 @@ OzodCoder o'quv markazi uchun bitiruv loyihasi sifatida qurilgan online ta'lim p
 ```
 ozodcoder/
 ├── frontend/          # React ilova (Vite)
+│   ├── design-reference/ # Dizayn tizimi spetsifikatsiyasi (DESIGN.md)
 │   └── src/
 │       ├── pages/         # Bosh sahifa, Kurslar, Kurs tafsiloti, Dars, Sevimlilar, Kirish/Ro'yxat, Admin
 │       ├── components/    # Navbar, Footer, CourseCard, icons
@@ -79,4 +80,4 @@ Yangi ro'yxatdan o'tgan foydalanuvchi standart holatda `student` bo'ladi. Kimnid
 
 ## Muallif eslatmasi
 
-Ushbu loyiha "Academic Precision" dizayn tizimi (`design-reference/DESIGN.md`) asosida qurilgan — ranglar, tipografiya va shakllar shu spetsifikatsiyaga mos, `frontend/src/index.css` da CSS custom property sifatida yozilgan.
+Ushbu loyiha "Academic Precision" dizayn tizimi (`frontend/design-reference/DESIGN.md`) asosida qurilgan — ranglar, tipografiya va shakllar shu spetsifikatsiyaga mos, `frontend/src/index.css` da CSS custom property sifatida yozilgan.
