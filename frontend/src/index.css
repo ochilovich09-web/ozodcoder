@@ -11,7 +11,6 @@
   --color-primary: #0041c8;
   --color-primary-dark: #00339e;
   --color-on-primary: #ffffff;
-  --color-primary-container: #0055ff;
   --color-secondary: #00677f;
   --color-secondary-container: #00ccf9;
   --color-error: #ba1a1a;
@@ -819,14 +818,6 @@ button:disabled {
   padding: 64px 0;
   text-align: center;
   color: var(--color-on-surface-variant);
-}
-
-.empty-box {
-  margin-top: 40px;
-  border-radius: var(--radius-lg);
-  border: 1px dashed var(--color-outline-variant);
-  padding: 64px 0;
-  text-align: center;
 }
 
 @media (min-width: 768px) {

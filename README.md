@@ -1,11 +1,17 @@
 # OzodCoder — Online Kurslar Sayti
 
-OzodCoder o'quv markazi uchun bitiruv loyihasi sifatida qurilgan online ta'lim platformasi. Foydalanuvchi kurslarni ko'rishi, kategoriya bo'yicha filtrlashi, qidirishi, video darslarni tomosha qilishi, o'z progressini kuzatishi va kurslarni sevimlilarga qo'shishi mumkin.
+OzodCoder o'quv markazi uchun bitiruv loyihasi sifatida qurilgan online ta'lim platformasi. Foydalanuvchi kurslarni ko'rishi, kategoriya bo'yicha filtrlashi, qidirishi, video darslarni tomosha qilishi, o'z progressini kuzatishi va kurslarni sevimlilarga qo'shishi mumkin. Admin kurslarni qo'shishi, tahrirlashi va o'chirishi mumkin.
+
+## Jonli havolalar
+
+- **Sayt:** https://ozodcoder.vercel.app
+- **Backend API:** https://ozodcoder-production.up.railway.app/api/health
 
 ## Texnologiyalar
 
-**Frontend:** React, React Router, Tailwind CSS, Vite
+**Frontend:** React, React Router, hand-written CSS (CSS custom properties), Vite
 **Backend:** Node.js, Express, MongoDB (Mongoose), JWT autentifikatsiya
+**Deploy:** Vercel (frontend), Railway (backend), MongoDB Atlas (baza)
 
 ## Loyiha tuzilishi
 
@@ -13,10 +19,11 @@ OzodCoder o'quv markazi uchun bitiruv loyihasi sifatida qurilgan online ta'lim p
 ozodcoder/
 ├── frontend/          # React ilova (Vite)
 │   └── src/
-│       ├── pages/         # Bosh sahifa, Kurslar, Kurs tafsiloti, Dars, Sevimlilar, Kirish/Ro'yxat
-│       ├── components/    # Navbar, Footer, CourseCard
+│       ├── pages/         # Bosh sahifa, Kurslar, Kurs tafsiloti, Dars, Sevimlilar, Kirish/Ro'yxat, Admin
+│       ├── components/    # Navbar, Footer, CourseCard, icons
 │       ├── context/       # Favorites, Progress, Auth (React Context)
-│       └── data/          # Namuna kurs ma'lumotlari (backend ulanmaguncha)
+│       ├── data/          # Namuna kurs ma'lumotlari (backend ulanmaguncha)
+│       └── index.css      # Barcha uslub — dizayn tokenlari CSS custom property sifatida
 └── backend/            # Express API
     └── src/
         ├── models/         # User, Course, Progress (Mongoose sxemalari)
@@ -52,6 +59,8 @@ Frontend backend bilan ulangan (`src/api/courses.js`, `src/api/user.js`), lekin 
 
 Progress va Favorites context'lari ham xuddi shunday ishlaydi: tizimga kirilgan bo'lsa backendga (`/api/progress`, `/api/favorites`) yozadi, doim localStorage'ga ham zaxira saqlaydi.
 
+Deploy qilingan holatda (masalan Vercel'da) `/api` proxy ishlamaydi, shuning uchun `frontend/.env` da `VITE_API_URL` ni backend'ning to'liq havolasiga o'rnating (masalan `VITE_API_URL=https://ozodcoder-production.up.railway.app/api`).
+
 ## Asosiy funksiyalar
 
 - Bosh sahifa, mashhur kurslar, statistikalar
@@ -61,14 +70,13 @@ Progress va Favorites context'lari ham xuddi shunday ishlaydi: tizimga kirilgan 
 - Progress kuzatish — har bir darsni "tugallandi" deb belgilash, foizli progress bar
 - Sevimli kurslar — qo'shish/olib tashlash, alohida sahifada ko'rish
 - Ro'yxatdan o'tish / Kirish — JWT autentifikatsiya (backend)
+- Admin panel (`/admin`) — faqat `role: "admin"` bo'lgan foydalanuvchiga ko'rinadi, kurs qo'shish/tahrirlash/o'chirish
 - To'liq responsive dizayn (mobil va desktop)
+
+## Admin huquqini berish
+
+Yangi ro'yxatdan o'tgan foydalanuvchi standart holatda `student` bo'ladi. Kimnidir admin qilish uchun MongoDB Atlas'da (Database → Browse Collections → `users`) shu foydalanuvchi hujjatini tahrirlab, `role` maydonini `"student"` dan `"admin"` ga o'zgartiring, so'ng saytda qayta login qiling (yangi token admin huquqini o'z ichiga oladi).
 
 ## Muallif eslatmasi
 
-Ushbu loyiha "Academic Precision" dizayn tizimi (`stitch_aesthetic_style_generator` papkasidagi DESIGN.md) asosida qurilgan — ranglar, tipografiya va shakllar shu spetsifikatsiyaga mos.
-
-**Keyingi qadamlar (o'zingiz qo'shishingiz kerak bo'lgan qismlar):**
-- Admin panel UI (backend'da admin route'lar tayyor: POST/PUT/DELETE `/api/courses`, lekin frontend'da sahifa yo'q — buni o'zingiz yozing, bu ham "mustaqil qism" talabiga mos keladi)
-- `npm install` qilib, ikkala serverni ham ishga tushirib real test qiling — men tarmoqqa ulanmagan muhitda ishlaganim uchun kodni faqat sintaksis jihatdan tekshira oldim, browser'da hali sinalmagan
-- MongoDB Atlas yoki lokal Mongo o'rnatib, `npm run seed` ni ishlatib ko'ring
-- Taqdimotga tayyorlanishda har bir context (`AuthContext`, `FavoritesContext`, `ProgressContext`) qanday ishlashini o'zingizga tushuntirib ko'ring — bu haqda savol berishlari mumkin
+Ushbu loyiha "Academic Precision" dizayn tizimi (`design-reference/DESIGN.md`) asosida qurilgan — ranglar, tipografiya va shakllar shu spetsifikatsiyaga mos, `frontend/src/index.css` da CSS custom property sifatida yozilgan.
