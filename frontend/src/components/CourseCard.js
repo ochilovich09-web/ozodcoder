@@ -8,6 +8,8 @@ export default function CourseCard({ course }) {
   const { getCourseProgressPercent } = useProgress()
   const favorite = isFavorite(course.id)
   const percent = getCourseProgressPercent(course.id, course.lessons.length)
+  let favoriteButtonClass = 'course-card__favorite'
+  if (favorite) favoriteButtonClass = 'course-card__favorite course-card__favorite--active'
 
   return (
     <div className="course-card">
@@ -21,7 +23,7 @@ export default function CourseCard({ course }) {
       <button
         onClick={() => toggleFavorite(course.id)}
         aria-label="Sevimlilarga qo'shish"
-        className={`course-card__favorite ${favorite ? 'course-card__favorite--active' : ''}`}
+        className={favoriteButtonClass}
       >
         <HeartIcon filled={favorite} />
       </button>

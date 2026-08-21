@@ -2,7 +2,10 @@ import { Link, NavLink } from 'react-router-dom'
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 
-const navLinkClass = ({ isActive }) => `nav-link ${isActive ? 'nav-link--active' : ''}`
+function navLinkClass({ isActive }) {
+  if (isActive) return 'nav-link nav-link--active'
+  return 'nav-link'
+}
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)

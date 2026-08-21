@@ -70,19 +70,22 @@ export default function CourseDetail() {
         <div className="syllabus">
           <h2 className="syllabus__title">Syllabus</h2>
           <ul className="syllabus__list">
-            {course.lessons.map((lesson, idx) => (
-              <li key={lesson.id}>
-                <Link to={`/kurslar/${course.id}/darslar/${lesson.id}`} className="syllabus__link">
-                  <span className="syllabus__left">
-                    <span className={`syllabus__index ${isLessonComplete(course.id, lesson.id) ? 'syllabus__index--done' : ''}`}>
-                      {isLessonComplete(course.id, lesson.id) ? <CheckIcon /> : idx + 1}
+            {course.lessons.map((lesson, idx) => {
+              const done = isLessonComplete(course.id, lesson.id)
+              let indexClass = 'syllabus__index'
+              if (done) indexClass = 'syllabus__index syllabus__index--done'
+              return (
+                <li key={lesson.id}>
+                  <Link to={`/kurslar/${course.id}/darslar/${lesson.id}`} className="syllabus__link">
+                    <span className="syllabus__left">
+                      <span className={indexClass}>{done ? <CheckIcon /> : idx + 1}</span>
+                      <span className="syllabus__title-text">{lesson.title}</span>
                     </span>
-                    <span className="syllabus__title-text">{lesson.title}</span>
-                  </span>
-                  <span className="syllabus__duration">{lesson.duration}</span>
-                </Link>
-              </li>
-            ))}
+                    <span className="syllabus__duration">{lesson.duration}</span>
+                  </Link>
+                </li>
+              )
+            })}
           </ul>
         </div>
       </div>

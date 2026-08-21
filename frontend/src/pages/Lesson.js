@@ -37,6 +37,8 @@ export default function Lesson() {
   const nextLesson = course.lessons[lessonIndex + 1]
   const completed = isLessonComplete(course.id, lesson.id)
   const percent = getCourseProgressPercent(course.id, course.lessons.length)
+  let completeButtonClass = 'btn-complete'
+  if (completed) completeButtonClass = 'btn-complete btn-complete--done'
 
   return (
     <div className="container" style={{ paddingTop: 32, paddingBottom: 32 }}>
@@ -67,7 +69,7 @@ export default function Lesson() {
         </div>
         <button
           onClick={() => toggleLessonComplete(course.id, lesson.id)}
-          className={`btn-complete ${completed ? 'btn-complete--done' : ''}`}
+          className={completeButtonClass}
         >
           {completed && <CheckIcon />}
           {completed ? 'Tugallandi' : "Tugallandi deb belgilash"}

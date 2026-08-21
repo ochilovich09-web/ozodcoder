@@ -43,15 +43,15 @@ export default function Courses() {
 
       <div className="filters">
         <div className="filters__chips">
-          {['Barchasi', ...categories].map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`chip ${activeCategory === cat ? 'chip--active' : ''}`}
-            >
-              {cat}
-            </button>
-          ))}
+          {['Barchasi', ...categories].map((cat) => {
+            let chipClass = 'chip'
+            if (activeCategory === cat) chipClass = 'chip chip--active'
+            return (
+              <button key={cat} onClick={() => setActiveCategory(cat)} className={chipClass}>
+                {cat}
+              </button>
+            )
+          })}
         </div>
 
         <div className="search-input">
