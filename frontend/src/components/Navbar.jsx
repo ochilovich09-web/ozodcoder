@@ -12,7 +12,7 @@ export default function Navbar() {
     <header className="navbar">
       <div className="container navbar__row">
         <Link to="/" className="navbar__logo">
-          <span className="navbar__logo-mark">O</span>
+          <span className="navbar__logo-mark">&gt;_</span>
           OzodCoder
         </Link>
 
