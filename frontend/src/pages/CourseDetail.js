@@ -4,12 +4,14 @@ import { getCourseById as getLocalCourseById } from '../data/courses'
 import { fetchCourseById } from '../api/courses'
 import { useFavorites } from '../context/FavoritesContext'
 import { useProgress } from '../context/ProgressContext'
+import { useAuth } from '../context/AuthContext'
 import { StarIcon, UsersIcon, ClockIcon, TeacherIcon, HeartIcon, VideoIcon, InfinityIcon, CheckIcon } from '../components/icons'
 
 export default function CourseDetail() {
   const { courseId } = useParams()
   const [course, setCourse] = useState(() => getLocalCourseById(courseId))
   const [notFound, setNotFound] = useState(false)
+  const { isAuthenticated } = useAuth()
   const { isFavorite, toggleFavorite } = useFavorites()
   const { isLessonComplete, getCourseProgressPercent } = useProgress()
 
@@ -29,6 +31,7 @@ export default function CourseDetail() {
   }, [courseId])
 
   if (notFound) return <Navigate to="/kurslar" replace />
+  if (!isAuthenticated) return <Navigate to="/royxatdan-otish" replace />
   if (!course) return null
 
   const percent = getCourseProgressPercent(course.id, course.lessons.length)

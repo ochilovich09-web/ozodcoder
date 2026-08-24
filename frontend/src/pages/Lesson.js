@@ -3,12 +3,14 @@ import { Link, useParams, Navigate } from 'react-router-dom'
 import { getCourseById as getLocalCourseById } from '../data/courses'
 import { fetchCourseById } from '../api/courses'
 import { useProgress } from '../context/ProgressContext'
+import { useAuth } from '../context/AuthContext'
 import { CheckIcon } from '../components/icons'
 
 export default function Lesson() {
   const { courseId, lessonId } = useParams()
   const [course, setCourse] = useState(() => getLocalCourseById(courseId))
   const [notFound, setNotFound] = useState(false)
+  const { isAuthenticated } = useAuth()
   const { isLessonComplete, toggleLessonComplete, getCourseProgressPercent } = useProgress()
 
   useEffect(() => {
@@ -26,6 +28,7 @@ export default function Lesson() {
   }, [courseId])
 
   if (notFound) return <Navigate to="/kurslar" replace />
+  if (!isAuthenticated) return <Navigate to="/royxatdan-otish" replace />
   if (!course) return null
 
   const lessonIndex = course.lessons.findIndex((l) => l.id === lessonId)
