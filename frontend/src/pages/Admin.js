@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { fetchCourses, createCourseApi, updateCourseApi, deleteCourseApi } from '../api/courses'
+import { categories as baseCategories } from '../data/courses'
 
 const emptyForm = {
   id: '',
   title: '',
   subtitle: '',
-  category: 'Frontend',
+  category: '',
   level: 'Beginner',
   price: '',
   oldPrice: '',
@@ -36,6 +37,13 @@ export default function Admin() {
     fetchCourses()
       .then((data) => setCourses(data))
       .catch(() => setError('Kurslarni yuklab bo\'lmadi'))
+  }
+
+  const allCategories = [...baseCategories]
+  for (const course of courses) {
+    if (!allCategories.includes(course.category)) {
+      allCategories.push(course.category)
+    }
   }
 
   if (!isAuthenticated || user.role !== 'admin') {
@@ -147,12 +155,18 @@ export default function Admin() {
           onChange={(e) => setForm({ ...form, subtitle: e.target.value })}
           className="field"
         />
-        <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="field">
-          <option value="Frontend">Frontend</option>
-          <option value="Backend">Backend</option>
-          <option value="Dizayn">Dizayn</option>
-          <option value="AI">AI</option>
-        </select>
+        <input
+          placeholder="Kategoriya (yangisini yozing yoki mavjudidan tanlang)"
+          value={form.category}
+          onChange={(e) => setForm({ ...form, category: e.target.value })}
+          list="category-options"
+          className="field"
+        />
+        <datalist id="category-options">
+          {allCategories.map((cat) => (
+            <option key={cat} value={cat} />
+          ))}
+        </datalist>
         <select value={form.level} onChange={(e) => setForm({ ...form, level: e.target.value })} className="field">
           <option value="Beginner">Beginner</option>
           <option value="Junior">Junior</option>

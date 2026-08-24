@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
-import { courses as localCourses, categories } from '../data/courses'
+import { courses as localCourses, categories as baseCategories } from '../data/courses'
 import { fetchCourses } from '../api/courses'
 import CourseCard from '../components/CourseCard'
 import { WarningIcon } from '../components/icons'
@@ -35,6 +35,13 @@ export default function Courses() {
     const matchesQuery = c.title.toLowerCase().includes(query.trim().toLowerCase())
     return matchesCategory && matchesQuery
   })
+
+  const categories = [...baseCategories]
+  for (const course of allCourses) {
+    if (!categories.includes(course.category)) {
+      categories.push(course.category)
+    }
+  }
 
   return (
     <div className="container" style={{ paddingTop: 48, paddingBottom: 48 }}>
