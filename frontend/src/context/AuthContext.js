@@ -24,6 +24,22 @@ export function AuthProvider({ children }) {
     }
   }, [user])
 
+  // Sahifa yangilanganda foydalanuvchi ma'lumotini (masalan role) serverdan qayta tekshiramiz
+  useEffect(() => {
+    const token = localStorage.getItem(TOKEN_KEY)
+    if (!token) return
+
+    fetch(`${BASE}/auth/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Token yaroqsiz')
+        return res.json()
+      })
+      .then((data) => setUser(data.user))
+      .catch(() => setUser(null))
+  }, [])
+
   async function login(email, password) {
     const res = await fetch(`${BASE}/auth/login`, {
       method: 'POST',
