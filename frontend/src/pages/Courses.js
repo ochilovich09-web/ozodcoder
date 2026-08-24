@@ -27,7 +27,7 @@ export default function Courses() {
   }, [])
 
   if (!isAuthenticated) {
-    return <Navigate to="/kirish" replace />
+    return <Navigate to="/royxatdan-otish" replace />
   }
 
   const filtered = allCourses.filter((c) => {

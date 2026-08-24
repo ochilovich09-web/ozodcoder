@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { useFavorites } from '../context/FavoritesContext'
 import { courses as localCourses } from '../data/courses'
 import { fetchCourses } from '../api/courses'
 import CourseCard from '../components/CourseCard'
+import { useAuth } from '../context/AuthContext'
 
 export default function Favorites() {
+  const { isAuthenticated } = useAuth()
   const { favorites } = useFavorites()
   const [allCourses, setAllCourses] = useState(localCourses)
 
@@ -23,6 +25,10 @@ export default function Favorites() {
   }, [])
 
   const favoriteCourses = allCourses.filter((c) => favorites.includes(c.id))
+
+  if (!isAuthenticated) {
+    return <Navigate to="/royxatdan-otish" replace />
+  }
 
   return (
     <div className="container" style={{ paddingTop: 48, paddingBottom: 48 }}>
