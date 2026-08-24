@@ -19,6 +19,7 @@
   --color-success: #10b981;
   --color-warning: #f59e0b;
   --color-border-light: #e5e7eb;
+  --color-surface-translucent: rgba(252, 249, 248, 0.9);
 
   --radius-sm: 0.25rem;
   --radius: 0.5rem;
@@ -33,6 +34,29 @@
   --max-width-content: 1280px;
   --font-display: 'Hanken Grotesk', sans-serif;
   --font-body: 'Inter', sans-serif;
+}
+
+[data-theme='dark'] {
+  --color-surface: #17181c;
+  --color-surface-container-lowest: #1e2025;
+  --color-surface-container-low: #212328;
+  --color-surface-container: #26282e;
+  --color-surface-container-high: #2c2f36;
+  --color-on-surface: #f0f0f2;
+  --color-on-surface-variant: #b3b6c4;
+  --color-outline-variant: #3a3d47;
+  --color-primary: #6d8bff;
+  --color-primary-dark: #8fa4ff;
+  --color-on-primary: #0a1230;
+  --color-secondary: #33d3f0;
+  --color-secondary-container: #0e6b7d;
+  --color-error: #ff6b6b;
+  --color-error-container: #4a1717;
+  --color-background-subtle: #1b2130;
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-border-light: #33363e;
+  --color-surface-translucent: rgba(23, 24, 28, 0.9);
 }
 
 /* ===== Reset & base ===== */
@@ -50,6 +74,7 @@ body {
   font-family: var(--font-body);
   color: var(--color-on-surface);
   background: var(--color-surface);
+  transition: background-color 200ms ease, color 200ms ease;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -126,7 +151,7 @@ button:disabled {
   top: 0;
   z-index: 50;
   border-bottom: 1px solid var(--color-border-light);
-  background: rgba(252, 249, 248, 0.9);
+  background: var(--color-surface-translucent);
   backdrop-filter: blur(8px);
 }
 
@@ -185,7 +210,26 @@ button:disabled {
 }
 
 .navbar__toggle {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.theme-toggle {
+  display: flex;
+  height: 36px;
+  width: 36px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-outline-variant);
+  color: var(--color-on-surface-variant);
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  transform: rotate(15deg);
 }
 
 .navbar__mobile {

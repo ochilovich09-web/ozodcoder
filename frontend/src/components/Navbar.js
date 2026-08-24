@@ -1,6 +1,9 @@
 import { Link, NavLink } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
+import { SunIcon, MoonIcon } from './icons'
+
+const THEME_KEY = 'ozodcoder_theme'
 
 function navLinkClass({ isActive }) {
   if (isActive) return 'nav-link nav-link--active'
@@ -9,7 +12,21 @@ function navLinkClass({ isActive }) {
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  const [theme, setTheme] = useState(() => localStorage.getItem(THEME_KEY) || 'light')
   const { isAuthenticated, user, logout } = useAuth()
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    localStorage.setItem(THEME_KEY, theme)
+  }, [theme])
+
+  function toggleTheme() {
+    if (theme === 'light') {
+      setTheme('dark')
+    } else {
+      setTheme('light')
+    }
+  }
 
   return (
     <header className="navbar">
@@ -37,6 +54,9 @@ export default function Navbar() {
         </nav>
 
         <div className="navbar__actions">
+          <button onClick={toggleTheme} className="theme-toggle" aria-label="Tungi/Kunduzgi rejim">
+            {theme === 'light' ? <MoonIcon /> : <SunIcon />}
+          </button>
           {isAuthenticated ? (
             <div className="navbar__user">
               <span className="navbar__greeting">Salom, {user.name}</span>
@@ -56,11 +76,16 @@ export default function Navbar() {
           )}
         </div>
 
-        <button className="navbar__toggle" onClick={() => setOpen((v) => !v)} aria-label="Menyuni ochish">
-          <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
+        <div className="navbar__toggle">
+          <button onClick={toggleTheme} className="theme-toggle" aria-label="Tungi/Kunduzgi rejim">
+            {theme === 'light' ? <MoonIcon /> : <SunIcon />}
+          </button>
+          <button onClick={() => setOpen((v) => !v)} aria-label="Menyuni ochish">
+            <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       {open && (
