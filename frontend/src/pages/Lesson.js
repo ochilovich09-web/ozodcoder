@@ -5,6 +5,7 @@ import { fetchCourseById } from '../api/courses'
 import { useProgress } from '../context/ProgressContext'
 import { useAuth } from '../context/AuthContext'
 import { CheckIcon } from '../components/icons'
+import { toEmbedUrl } from '../utils/youtube'
 
 export default function Lesson() {
   const { courseId, lessonId } = useParams()
@@ -57,7 +58,7 @@ export default function Lesson() {
       <div className="lesson-player">
         <div className="lesson-player__frame">
           <iframe
-            src={lesson.videoUrl}
+            src={toEmbedUrl(lesson.videoUrl)}
             title={lesson.title}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen

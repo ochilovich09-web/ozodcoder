@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { fetchCourses, createCourseApi, updateCourseApi, deleteCourseApi } from '../api/courses'
 import { categories as baseCategories } from '../data/courses'
+import { toEmbedUrl } from '../utils/youtube'
 
 const emptyForm = {
   id: '',
@@ -55,7 +56,8 @@ export default function Admin() {
       alert('Dars uchun id, nom va video havola talab qilinadi')
       return
     }
-    setLessons([...lessons, lessonForm])
+    const normalizedLesson = { ...lessonForm, videoUrl: toEmbedUrl(lessonForm.videoUrl) }
+    setLessons([...lessons, normalizedLesson])
     setLessonForm(emptyLesson)
   }
 
