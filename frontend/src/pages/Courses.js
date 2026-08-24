@@ -3,7 +3,6 @@ import { Navigate } from 'react-router-dom'
 import { courses as localCourses, categories as baseCategories } from '../data/courses'
 import { fetchCourses } from '../api/courses'
 import CourseCard from '../components/CourseCard'
-import { WarningIcon } from '../components/icons'
 import { useAuth } from '../context/AuthContext'
 
 export default function Courses() {
@@ -11,14 +10,12 @@ export default function Courses() {
   const [activeCategory, setActiveCategory] = useState('Barchasi')
   const [query, setQuery] = useState('')
   const [allCourses, setAllCourses] = useState(localCourses)
-  const [usingLiveData, setUsingLiveData] = useState(false)
 
   useEffect(() => {
     fetchCourses()
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           setAllCourses(data)
-          setUsingLiveData(true)
         }
       })
       .catch(() => {
@@ -48,11 +45,6 @@ export default function Courses() {
       <div className="page-header">
         <h1 className="page-title">Barcha Kurslar</h1>
         <p className="page-subtitle">Kategoriya bo'yicha filtrlang yoki kurs nomi bo'yicha qidiring.</p>
-        {!usingLiveData && (
-          <p className="notice">
-            <WarningIcon /> Backend serverga ulanilmadi — namuna ma'lumotlar ko'rsatilmoqda.
-          </p>
-        )}
       </div>
 
       <div className="filters">
