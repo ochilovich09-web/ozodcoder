@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react'
+import { Navigate } from 'react-router-dom'
 import { courses as localCourses, categories } from '../data/courses'
 import { fetchCourses } from '../api/courses'
 import CourseCard from '../components/CourseCard'
 import { WarningIcon } from '../components/icons'
+import { useAuth } from '../context/AuthContext'
 
 export default function Courses() {
+  const { isAuthenticated } = useAuth()
   const [activeCategory, setActiveCategory] = useState('Barchasi')
   const [query, setQuery] = useState('')
   const [allCourses, setAllCourses] = useState(localCourses)
@@ -22,6 +25,10 @@ export default function Courses() {
         // Backend mavjud emas - namuna ma'lumot bilan davom etamiz
       })
   }, [])
+
+  if (!isAuthenticated) {
+    return <Navigate to="/kirish" replace />
+  }
 
   const filtered = allCourses.filter((c) => {
     const matchesCategory = activeCategory === 'Barchasi' || c.category === activeCategory
