@@ -36,6 +36,7 @@ export default function Home() {
     <div>
       {/* Hero */}
       <section className="hero">
+        <div aria-hidden className="hero__dot-grid" />
         <div aria-hidden className="hero__blob hero__blob--one" />
         <div aria-hidden className="hero__blob hero__blob--two" />
         <div className="container hero__grid">
