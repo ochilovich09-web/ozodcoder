@@ -389,7 +389,7 @@ button:disabled {
   opacity: 0.12;
   mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 40%, transparent 100%);
   -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 40%, transparent 100%);
-  animation: dot-grid-drift 18s linear infinite;
+  animation: dot-grid-drift 4s linear infinite;
 }
 
 @keyframes dot-grid-drift {
