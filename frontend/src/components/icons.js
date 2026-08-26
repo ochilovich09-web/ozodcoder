@@ -40,7 +40,7 @@ export function TeacherIcon(props) {
 export function HeartIcon({ filled, ...props }) {
   return (
     <svg viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="18" height="18" {...props}>
-      <path d="M12 20.5s-7.5-4.6-9.8-9.2C.7 8 2 4.7 5.2 3.9c2-.5 4 .3 5 2 1-1.7 3-2.5 5-2 3.2.8 4.5 4.1 3 7.4-2.3 4.6-9.8 9.2-9.8 9.2z" />
+      <path d="M12 20C12 20 3 14.5 3 8.5C3 5.5 5.5 3.5 8 3.5C9.8 3.5 11.2 4.5 12 6C12.8 4.5 14.2 3.5 16 3.5C18.5 3.5 21 5.5 21 8.5C21 14.5 12 20 12 20Z" />
     </svg>
   )
 }
