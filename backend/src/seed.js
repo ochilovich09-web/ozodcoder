@@ -87,12 +87,12 @@ async function seed() {
   await connectDB()
   await Course.deleteMany({})
   await Course.insertMany(courses)
-  console.log(`✅ ${courses.length} ta kurs bazaga qo'shildi`)
+  console.log(`${courses.length} ta kurs bazaga qo'shildi`)
   await mongoose.disconnect()
   process.exit(0)
 }
 
 seed().catch((err) => {
-  console.error('❌ Seed xatoligi:', err)
+  console.error('Seed xatoligi:', err)
   process.exit(1)
 })

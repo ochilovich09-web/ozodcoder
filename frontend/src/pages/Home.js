@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { courses } from '../data/courses'
 import CourseCard from '../components/CourseCard'
+import Reveal from '../components/Reveal'
 import { SparkleIcon, BadgeIcon, UnlockIcon, CodeIcon } from '../components/icons'
 
 const stats = [
@@ -86,17 +87,21 @@ export default function Home() {
 
       {/* Popular courses */}
       <section className="section container">
-        <div className="section-header">
-          <h2 className="section-title">O'quv Dasturini O'rganing</h2>
-          <p className="section-subtitle">
-            Sanoatning yetakchi kurslari bilan zamonaviy dasturiy ta'minot ishlab chiqishni
-            o'zlashtiring.
-          </p>
-        </div>
+        <Reveal>
+          <div className="section-header">
+            <h2 className="section-title">O'quv Dasturini O'rganing</h2>
+            <p className="section-subtitle">
+              Sanoatning yetakchi kurslari bilan zamonaviy dasturiy ta'minot ishlab chiqishni
+              o'zlashtiring.
+            </p>
+          </div>
+        </Reveal>
 
         <div className="course-grid course-grid--4">
-          {popular.map((course) => (
-            <CourseCard key={course.id} course={course} />
+          {popular.map((course, idx) => (
+            <Reveal key={course.id} delay={idx * 90}>
+              <CourseCard course={course} />
+            </Reveal>
           ))}
         </div>
 
@@ -110,16 +115,27 @@ export default function Home() {
       {/* Why us */}
       <section className="section--tint">
         <div className="container section" style={{ textAlign: 'center' }}>
-          <h2 className="section-title">Nima uchun OzodCoder ni tanlash kerak?</h2>
+          <Reveal>
+            <h2 className="section-title">Nima uchun OzodCoder ni tanlash kerak?</h2>
+          </Reveal>
           <div className="why-grid">
-            {whyUs.map((item) => (
-              <div key={item.title} className="why-card">
-                <div className="why-card__icon">
-                  <item.icon />
+            {whyUs.map((item, idx) => (
+              <Reveal key={item.title} delay={idx * 90}>
+                <div
+                  className="why-card glow-card"
+                  onMouseMove={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect()
+                    e.currentTarget.style.setProperty('--glow-x', `${e.clientX - rect.left}px`)
+                    e.currentTarget.style.setProperty('--glow-y', `${e.clientY - rect.top}px`)
+                  }}
+                >
+                  <div className="why-card__icon">
+                    <item.icon />
+                  </div>
+                  <h3 className="why-card__title">{item.title}</h3>
+                  <p className="why-card__text">{item.text}</p>
                 </div>
-                <h3 className="why-card__title">{item.title}</h3>
-                <p className="why-card__text">{item.text}</p>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -127,7 +143,7 @@ export default function Home() {
 
       {/* CTA */}
       <section className="hero">
-        <div className="container section" style={{ textAlign: 'center' }}>
+        <Reveal className="container section" style={{ textAlign: 'center' }}>
           <h2 className="section-title">Dasturlash sayohatingizni bugun boshlang</h2>
           <p className="section-subtitle" style={{ maxWidth: '28rem', margin: '8px auto 0' }}>
             10,000+ dasturchiga qo'shiling va o'z martabangizni keyingi bosqichga olib chiqing.
@@ -135,7 +151,7 @@ export default function Home() {
           <Link to="/kurslar" className="btn btn-primary" style={{ marginTop: 24, display: 'inline-flex' }}>
             Kurslarni Ko'rish
           </Link>
-        </div>
+        </Reveal>
       </section>
     </div>
   )

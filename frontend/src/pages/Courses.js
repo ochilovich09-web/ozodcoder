@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom'
 import { courses as localCourses, categories as baseCategories } from '../data/courses'
 import { fetchCourses } from '../api/courses'
 import CourseCard from '../components/CourseCard'
+import Reveal from '../components/Reveal'
 import { useAuth } from '../context/AuthContext'
 
 export default function Courses() {
@@ -75,8 +76,10 @@ export default function Courses() {
         <p className="empty-state">Hech qanday kurs topilmadi. Boshqa so'z bilan qidirib ko'ring.</p>
       ) : (
         <div className="course-grid course-grid--3">
-          {filtered.map((course) => (
-            <CourseCard key={course.id} course={course} />
+          {filtered.map((course, idx) => (
+            <Reveal key={course.id} delay={idx * 90}>
+              <CourseCard course={course} />
+            </Reveal>
           ))}
         </div>
       )}

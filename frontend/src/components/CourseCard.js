@@ -11,8 +11,14 @@ export default function CourseCard({ course }) {
   let favoriteButtonClass = 'course-card__favorite'
   if (favorite) favoriteButtonClass = 'course-card__favorite course-card__favorite--active'
 
+  function handleGlowMove(e) {
+    const rect = e.currentTarget.getBoundingClientRect()
+    e.currentTarget.style.setProperty('--glow-x', `${e.clientX - rect.left}px`)
+    e.currentTarget.style.setProperty('--glow-y', `${e.clientY - rect.top}px`)
+  }
+
   return (
-    <div className="course-card">
+    <div className="course-card glow-card" onMouseMove={handleGlowMove}>
       <Link to={`/kurslar/${course.id}`}>
         <div className="course-card__thumb">
           <img src={course.thumbnail} alt={course.title} />
