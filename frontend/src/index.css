@@ -573,7 +573,7 @@ button:disabled {
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.3s ease;
-  background: radial-gradient(280px circle at var(--glow-x, 50%) var(--glow-y, 50%), rgba(51, 211, 240, 0.16), transparent 70%);
+  background: radial-gradient(280px circle at var(--glow-x, 50%) var(--glow-y, 50%), rgba(0, 65, 200, 0.22), transparent 70%);
 }
 
 .glow-card:hover::before {
