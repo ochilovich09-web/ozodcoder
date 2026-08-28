@@ -37,11 +37,11 @@ export default function Navbar() {
         </Link>
 
         <nav className="navbar__nav">
-          <NavLink to="/kurslar" className={navLinkClass}>
-            Kurslar
-          </NavLink>
           <NavLink to="/" className={navLinkClass} end>
             Biz Haqimizda
+          </NavLink>
+          <NavLink to="/kurslar" className={navLinkClass}>
+            Kurslar
           </NavLink>
           <NavLink to="/sevimlilar" className={navLinkClass}>
             Sevimlilar
