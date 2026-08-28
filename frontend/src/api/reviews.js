@@ -26,3 +26,11 @@ export async function submitReview(courseId, rating, comment) {
   })
   return handleResponse(res)
 }
+
+export async function deleteReview(courseId) {
+  const res = await fetch(`${BASE}/reviews/${courseId}`, {
+    method: 'DELETE',
+    headers: authHeaders(),
+  })
+  return handleResponse(res)
+}

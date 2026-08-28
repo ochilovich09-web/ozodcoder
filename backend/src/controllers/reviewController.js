@@ -46,3 +46,19 @@ export async function upsertReview(req, res) {
     res.status(500).json({ message: 'Server xatoligi', error: err.message })
   }
 }
+
+export async function deleteReview(req, res) {
+  try {
+    const { courseId } = req.params
+    const review = await Review.findOneAndDelete({ user: req.userId, courseId })
+    if (!review) {
+      return res.status(404).json({ message: 'Sharh topilmadi' })
+    }
+
+    await recalculateCourseRating(courseId)
+
+    res.json({ message: "Sharh o'chirildi" })
+  } catch (err) {
+    res.status(500).json({ message: 'Server xatoligi', error: err.message })
+  }
+}

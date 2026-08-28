@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams, Navigate } from 'react-router-dom'
 import { getCourseById as getLocalCourseById } from '../data/courses'
 import { fetchCourseById } from '../api/courses'
-import { fetchReviews, submitReview } from '../api/reviews'
+import { fetchReviews, submitReview, deleteReview } from '../api/reviews'
 import { useFavorites } from '../context/FavoritesContext'
 import { useProgress } from '../context/ProgressContext'
 import { useAuth } from '../context/AuthContext'
@@ -19,6 +19,7 @@ export default function CourseDetail() {
   const [reviews, setReviews] = useState([])
   const [myRating, setMyRating] = useState(0)
   const [myComment, setMyComment] = useState('')
+  const [hasMyReview, setHasMyReview] = useState(false)
   const [reviewError, setReviewError] = useState('')
   const [submittingReview, setSubmittingReview] = useState(false)
 
@@ -45,6 +46,7 @@ export default function CourseDetail() {
         if (mine) {
           setMyRating(mine.rating)
           setMyComment(mine.comment || '')
+          setHasMyReview(true)
         }
       })
       .catch(() => {
@@ -64,12 +66,30 @@ export default function CourseDetail() {
       await submitReview(courseId, myRating, myComment)
       const updated = await fetchReviews(courseId)
       setReviews(updated)
+      setHasMyReview(true)
       const freshCourse = await fetchCourseById(courseId)
       setCourse(freshCourse)
     } catch (err) {
       setReviewError(err.message)
     } finally {
       setSubmittingReview(false)
+    }
+  }
+
+  async function handleReviewDelete() {
+    if (!window.confirm("Sharhingizni o'chirishga ishonchingiz komilmi?")) return
+    setReviewError('')
+    try {
+      await deleteReview(courseId)
+      const updated = await fetchReviews(courseId)
+      setReviews(updated)
+      setHasMyReview(false)
+      setMyRating(0)
+      setMyComment('')
+      const freshCourse = await fetchCourseById(courseId)
+      setCourse(freshCourse)
+    } catch (err) {
+      setReviewError(err.message)
     }
   }
 
@@ -164,9 +184,16 @@ export default function CourseDetail() {
               rows={3}
             />
             {reviewError && <p className="error-text">{reviewError}</p>}
-            <button type="submit" disabled={submittingReview} className="btn btn-primary btn-sm">
-              {submittingReview ? 'Yuborilmoqda...' : 'Sharh qoldirish'}
-            </button>
+            <div className="admin-actions">
+              <button type="submit" disabled={submittingReview} className="btn btn-primary btn-sm">
+                {submittingReview ? 'Yuborilmoqda...' : hasMyReview ? 'Sharhni yangilash' : 'Sharh qoldirish'}
+              </button>
+              {hasMyReview && (
+                <button type="button" onClick={handleReviewDelete} className="btn btn-danger-outline btn-sm">
+                  Sharhni o'chirish
+                </button>
+              )}
+            </div>
           </form>
 
           <ul className="review-list">
