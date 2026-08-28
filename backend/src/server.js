@@ -6,6 +6,7 @@ import authRoutes from './routes/authRoutes.js'
 import courseRoutes from './routes/courseRoutes.js'
 import progressRoutes from './routes/progressRoutes.js'
 import favoritesRoutes from './routes/favoritesRoutes.js'
+import reviewRoutes from './routes/reviewRoutes.js'
 
 const app = express()
 
@@ -18,6 +19,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/courses', courseRoutes)
 app.use('/api/progress', progressRoutes)
 app.use('/api/favorites', favoritesRoutes)
+app.use('/api/reviews', reviewRoutes)
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Route topilmadi' })

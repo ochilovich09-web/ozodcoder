@@ -1,7 +1,11 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { courses } from '../data/courses'
+import { courses as localCourses } from '../data/courses'
+import { fetchCourses } from '../api/courses'
 import CourseCard from '../components/CourseCard'
 import Reveal from '../components/Reveal'
+import { useAuth } from '../context/AuthContext'
+import { useProgress } from '../context/ProgressContext'
 import { SparkleIcon, BadgeIcon, UnlockIcon, CodeIcon } from '../components/icons'
 
 const stats = [
@@ -30,8 +34,32 @@ const whyUs = [
 ]
 
 export default function Home() {
-  const featured = courses[0]
-  const popular = courses.slice(0, 4)
+  const { isAuthenticated } = useAuth()
+  const { getCourseProgressPercent } = useProgress()
+  const [allCourses, setAllCourses] = useState(localCourses)
+
+  useEffect(() => {
+    fetchCourses()
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setAllCourses(data)
+        }
+      })
+      .catch(() => {
+        // Backend mavjud emas - namuna ma'lumot bilan davom etamiz
+      })
+  }, [])
+
+  const featured = allCourses[0]
+  const popular = allCourses.slice(0, 4)
+
+  const continueLearning = []
+  for (const course of allCourses) {
+    const percent = getCourseProgressPercent(course.id, course.lessons.length)
+    if (percent > 0 && percent < 100) {
+      continueLearning.push({ ...course, percent })
+    }
+  }
 
   return (
     <div>
@@ -82,6 +110,26 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* Continue learning */}
+      {isAuthenticated && continueLearning.length > 0 && (
+        <section className="section container">
+          <Reveal>
+            <div className="section-header">
+              <h2 className="section-title">Davom eting</h2>
+              <p className="section-subtitle">Boshlagan kurslaringizni yakunlab qo'ying.</p>
+            </div>
+          </Reveal>
+
+          <div className="course-grid course-grid--4">
+            {continueLearning.slice(0, 4).map((course, idx) => (
+              <Reveal key={course.id} delay={idx * 90}>
+                <CourseCard course={course} />
+              </Reveal>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Popular courses */}
       <section className="section container">

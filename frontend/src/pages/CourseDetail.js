@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams, Navigate } from 'react-router-dom'
 import { getCourseById as getLocalCourseById } from '../data/courses'
 import { fetchCourseById } from '../api/courses'
+import { fetchReviews, submitReview } from '../api/reviews'
 import { useFavorites } from '../context/FavoritesContext'
 import { useProgress } from '../context/ProgressContext'
 import { useAuth } from '../context/AuthContext'
@@ -11,9 +12,15 @@ export default function CourseDetail() {
   const { courseId } = useParams()
   const [course, setCourse] = useState(() => getLocalCourseById(courseId))
   const [notFound, setNotFound] = useState(false)
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, user } = useAuth()
   const { isFavorite, toggleFavorite } = useFavorites()
   const { isLessonComplete, getCourseProgressPercent } = useProgress()
+
+  const [reviews, setReviews] = useState([])
+  const [myRating, setMyRating] = useState(0)
+  const [myComment, setMyComment] = useState('')
+  const [reviewError, setReviewError] = useState('')
+  const [submittingReview, setSubmittingReview] = useState(false)
 
   useEffect(() => {
     setNotFound(false)
@@ -29,6 +36,42 @@ export default function CourseDetail() {
         }
       })
   }, [courseId])
+
+  useEffect(() => {
+    fetchReviews(courseId)
+      .then((data) => {
+        setReviews(data)
+        const mine = data.find((r) => r.user && r.user._id === user?.id)
+        if (mine) {
+          setMyRating(mine.rating)
+          setMyComment(mine.comment || '')
+        }
+      })
+      .catch(() => {
+        // Sharhlarni yuklab bo'lmadi - jim o'tkazib yuboramiz
+      })
+  }, [courseId])
+
+  async function handleReviewSubmit(e) {
+    e.preventDefault()
+    setReviewError('')
+    if (myRating < 1) {
+      setReviewError('Baho tanlang')
+      return
+    }
+    setSubmittingReview(true)
+    try {
+      await submitReview(courseId, myRating, myComment)
+      const updated = await fetchReviews(courseId)
+      setReviews(updated)
+      const freshCourse = await fetchCourseById(courseId)
+      setCourse(freshCourse)
+    } catch (err) {
+      setReviewError(err.message)
+    } finally {
+      setSubmittingReview(false)
+    }
+  }
 
   if (notFound) return <Navigate to="/kurslar" replace />
   if (!isAuthenticated) return <Navigate to="/royxatdan-otish" replace />
@@ -89,6 +132,60 @@ export default function CourseDetail() {
                 </li>
               )
             })}
+          </ul>
+        </div>
+
+        <div className="reviews">
+          <h2 className="syllabus__title">Sharhlar {reviews.length > 0 && `(${reviews.length})`}</h2>
+
+          <form onSubmit={handleReviewSubmit} className="review-form">
+            <div className="star-picker">
+              {[1, 2, 3, 4, 5].map((n) => {
+                let starClass = 'star-picker__star'
+                if (n <= myRating) starClass = 'star-picker__star star-picker__star--filled'
+                return (
+                  <button
+                    key={n}
+                    type="button"
+                    onClick={() => setMyRating(n)}
+                    className={starClass}
+                    aria-label={`${n} yulduz`}
+                  >
+                    <StarIcon />
+                  </button>
+                )
+              })}
+            </div>
+            <textarea
+              placeholder="Kurs haqida fikringizni yozing (ixtiyoriy)"
+              value={myComment}
+              onChange={(e) => setMyComment(e.target.value)}
+              className="field"
+              rows={3}
+            />
+            {reviewError && <p className="error-text">{reviewError}</p>}
+            <button type="submit" disabled={submittingReview} className="btn btn-primary btn-sm">
+              {submittingReview ? 'Yuborilmoqda...' : 'Sharh qoldirish'}
+            </button>
+          </form>
+
+          <ul className="review-list">
+            {reviews.map((r) => (
+              <li key={r._id} className="review-item">
+                <div className="review-item__header">
+                  <span className="review-item__name">{r.user ? r.user.name : "O'chirilgan foydalanuvchi"}</span>
+                  <span className="review-item__stars">
+                    {[1, 2, 3, 4, 5].map((n) => (
+                      <StarIcon
+                        key={n}
+                        style={{ color: n <= r.rating ? 'var(--color-warning)' : 'var(--color-outline-variant)' }}
+                      />
+                    ))}
+                  </span>
+                </div>
+                {r.comment && <p className="review-item__text">{r.comment}</p>}
+              </li>
+            ))}
           </ul>
         </div>
       </div>
