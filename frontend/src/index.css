@@ -156,6 +156,7 @@ button:disabled {
 }
 
 .navbar__row {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -247,6 +248,11 @@ button:disabled {
 @media (min-width: 768px) {
   .navbar__nav, .navbar__actions {
     display: flex;
+  }
+  .navbar__nav {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   }
   .navbar__toggle {
     display: none;
