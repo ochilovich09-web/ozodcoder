@@ -407,29 +407,6 @@ button:disabled {
   }
 }
 
-.hero__blob {
-  position: absolute;
-  pointer-events: none;
-  border-radius: var(--radius-full);
-  filter: blur(64px);
-}
-
-.hero__blob--one {
-  right: -96px;
-  top: -96px;
-  height: 320px;
-  width: 320px;
-  background: rgba(0, 85, 255, 0.2);
-}
-
-.hero__blob--two {
-  left: -128px;
-  bottom: 0;
-  height: 288px;
-  width: 288px;
-  background: rgba(0, 204, 249, 0.15);
-}
-
 .hero__grid {
   position: relative;
   display: grid;
