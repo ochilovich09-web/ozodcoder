@@ -853,15 +853,6 @@ button:disabled {
   color: var(--color-on-surface-variant);
 }
 
-.notice {
-  margin-top: 8px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.75rem;
-  color: var(--color-warning);
-}
-
 .filters {
   display: flex;
   flex-direction: column;

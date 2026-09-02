@@ -122,13 +122,3 @@ export function MoonIcon(props) {
     </svg>
   )
 }
-
-export function WarningIcon(props) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" width="14" height="14" {...props}>
-      <path d="M12 3.5l10 17.5H2L12 3.5z" />
-      <path d="M12 10v4" />
-      <circle cx="12" cy="17.2" r="0.2" fill="currentColor" />
-    </svg>
-  )
-}
