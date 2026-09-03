@@ -1,0 +1,276 @@
+=================================================================
+OZODCODER — FRONTEND KODINI TUSHUNTIRISH
+(Taqdimot uchun tayyorgarlik - oddiy tilda)
+=================================================================
+
+Bu fayl sizga frontend/src papkasidagi har bir qismning nima
+qilishini va NEGA shunday yozilganini tushuntiradi. Maqsad -
+o'qituvchi "bu yerda nima bo'lyapti?" deb so'raganda o'z
+so'zlaringiz bilan javob bera olishingiz.
+
+
+=================================================================
+1. KATTA RASM - LOYIHA QANDAY ISHLAYDI
+=================================================================
+
+Sizning ilovangiz 3 ta alohida qismdan iborat:
+
+  [Brauzer - React]  <-- internet -->  [Server - Express]  <-- ma'lumot -->  [MongoDB]
+     Vercel'da                            Railway'da                          Atlas'da
+
+Frontend (React) FAQAT ko'rinishni chizadi va foydalanuvchi bilan
+gaplashadi. U hech qachon to'g'ridan-to'g'ri bazaga ulanmaydi -
+bu xavfsizlik uchun. Frontend har doim backendga "so'rov" (fetch)
+yuboradi, backend bazadan javob olib beradi.
+
+ODDIY MISOL: Siz "Kurslar" sahifasini ochasiz.
+  1. React sahifani chizadi (hozircha bo'sh)
+  2. useEffect ichida fetch('/api/courses') chaqiriladi
+  3. Backend MongoDB'dan kurslarni oladi, JSON qilib qaytaradi
+  4. React setAllCourses(data) bilan holatni yangilaydi
+  5. Sahifa qayta chiziladi - endi kurslar ko'rinadi
+
+
+=================================================================
+2. FAYLLAR QAYERDA VA NIMA UCHUN
+=================================================================
+
+frontend/src/
+  main.js          -> ilova shu yerdan boshlanadi (kirish nuqtasi)
+  App.js            -> qaysi URL qaysi sahifani ko'rsatishini belgilaydi
+  index.css          -> BARCHA dizayn (ranglar, oraliqlar, animatsiyalar)
+  data/courses.js    -> backend ishlamasa ishlatiladigan zaxira ma'lumot
+  api/               -> backendga so'rov yuboradigan funksiyalar
+  context/           -> butun ilova bo'ylab "umumiy xotira"
+  pages/             -> har bir sahifaning o'zi (Home, Kurslar, va h.k.)
+  components/        -> qayta ishlatiladigan kichik qismlar (Navbar, CourseCard)
+
+
+=================================================================
+3. main.js - HAMMA NARSA SHU YERDAN BOSHLANADI
+=================================================================
+
+Bu fayl React ilovasini brauzerdagi <div id="root"> ichiga
+"o'rnatadi" (mount qiladi). U shuningdek 3 ta Context Provider
+bilan butun ilovani o'raydi:
+
+  <AuthProvider>       - kim login qilgan, degan ma'lumot
+    <FavoritesProvider> - sevimli kurslar ro'yxati
+      <ProgressProvider> - qaysi darslar tugallangan
+        <App />
+      </ProgressProvider>
+    </FavoritesProvider>
+  </AuthProvider>
+
+NEGA "Provider" kerak? Chunki masalan "foydalanuvchi login
+qilganmi?" degan ma'lumot Navbar'da HAM, Login sahifasida HAM,
+CourseDetail sahifasida HAM kerak. Agar Context bo'lmasa, bu
+ma'lumotni har bir komponentga qo'lda "prop" sifatida uzatib
+yurishga to'g'ri kelardi - juda noqulay. Context bitta joyda
+saqlaydi, istalgan komponent useAuth() chaqirib o'qiy oladi.
+
+
+=================================================================
+4. App.js - YO'NALTIRISH (ROUTING)
+=================================================================
+
+React Router kutubxonasi yordamida qaysi URL qaysi sahifani
+ko'rsatishini belgilaydi:
+
+  "/"                              -> Home.js (bosh sahifa)
+  "/kurslar"                       -> Courses.js (kurslar ro'yxati)
+  "/kurslar/:courseId"             -> CourseDetail.js (bitta kurs)
+  "/kurslar/:courseId/darslar/:id" -> Lesson.js (video dars)
+  "/sevimlilar"                    -> Favorites.js
+  "/kirish"                        -> Login.js
+  "/royxatdan-otish"               -> Register.js
+  "/admin"                         -> Admin.js
+  "*" (boshqa hammasi)             -> NotFound.js (404)
+
+":courseId" kabi ":" bilan boshlanadigan qismlar - "parametr".
+Masalan "/kurslar/react-tailwind" ochilsa, courseId="react-tailwind"
+bo'ladi va CourseDetail.js buni useParams() orqali o'qiydi.
+
+
+=================================================================
+5. CONTEXT'LAR - "UMUMIY XOTIRA"
+=================================================================
+
+--- AuthContext.js ---
+Login/register/logout mantiqi shu yerda. Muhim narsa:
+  - Login qilganda backend JWT TOKEN qaytaradi (bu - shifrlangan
+    "chipta", foydalanuvchi kimligini isbotlaydi)
+  - Token localStorage'ga saqlanadi (brauzer xotirasi, sahifa
+    yangilansa ham yo'qolmaydi)
+  - Har bir himoyalangan so'rovda bu token "Authorization" header
+    orqali backendga yuboriladi
+  - Sahifa yangilanganda /api/auth/me ga so'rov yuborib,
+    foydalanuvchi ma'lumoti (jumladan role - student/admin) qayta
+    tekshiriladi - shuning uchun admin qilingandan keyin oddiy
+    refresh yetarli, qayta login shart emas
+
+--- FavoritesContext.js ---
+Sevimli kurslar ro'yxatini saqlaydi. "Optimistic update" degan
+narsa ishlatilgan: tugma bosilganda UI DARHOL yangilanadi (foiz
+o'ylab o'tirmasdan), keyin orqa fonda backendga so'rov ketadi.
+Agar login qilinmagan bo'lsa, faqat localStorage'da saqlanadi.
+
+--- ProgressContext.js ---
+Qaysi darslar "tugallandi" deb belgilanganini saqlaydi. Shakli:
+  { "react-tailwind": { "l1": true, "l2": true }, ... }
+getCourseProgressPercent(courseId, jamiDarsSoni) funksiyasi
+foizni hisoblaydi: tugallangan darslar / jami darslar * 100.
+
+
+=================================================================
+6. api/ PAPKASI - BACKEND BILAN GAPLASHISH
+=================================================================
+
+Bu papkadagi fayllar faqat fetch() so'rovlarini o'rab beradi -
+boshqa hech narsa qilmaydi. Masalan api/courses.js:
+
+  export async function fetchCourses() {
+    const res = await fetch(`${BASE}/courses`)
+    return handleResponse(res)
+  }
+
+BASE o'zgaruvchisi muhim: local'da ishlaganda "/api" (Vite proxy
+orqali localhost:5000'ga yo'naltiriladi), lekin deploy qilingan
+saytda VITE_API_URL orqali to'g'ridan-to'g'ri Railway backend
+manziliga (https://ozodcoder-production.up.railway.app/api)
+yuboriladi. Buning sababi: Vercel'da proxy ishlamaydi, chunki u
+faqat statik fayllarni serve qiladi.
+
+
+=================================================================
+7. HAR BIR SAHIFA NIMA QILADI
+=================================================================
+
+--- Home.js ---
+Bosh sahifa: katta sarlavha (hero), statistikalar, mashhur
+kurslar, "Davom eting" (agar progress bo'lsa), "nega biz",
+va oxirida chaqiruv tugmasi. Sahifa ochilganda backend'dan
+haqiqiy kurslarni olishga harakat qiladi, muvaffaqiyatsiz
+bo'lsa data/courses.js dagi namuna ma'lumotga qaytadi.
+
+--- Courses.js ---
+Barcha kurslar ro'yxati. useState orqali 2 ta filtr saqlanadi:
+activeCategory (tanlangan kategoriya) va query (qidiruv matni).
+.filter() funksiyasi shu ikkalasiga mos kelmagan kurslarni
+chiqarib tashlaydi. Login qilinmagan bo'lsa, ro'yxatdan o'tishga
+yo'naltiradi (Navigate komponenti orqali).
+
+--- CourseDetail.js ---
+Bitta kursning to'liq ma'lumoti: tavsif, syllabus (darslar
+ro'yxati), sharhlar. Bu yerda ham sharh qoldirish formasi bor -
+5 ta yulduzcha tugmasi + izoh maydoni. Sharh yuborilganda backend
+avtomatik o'sha kursning umumiy reytingini qayta hisoblaydi.
+
+--- Lesson.js ---
+Video dars sahifasi. YouTube video <iframe> orqali ko'rsatiladi.
+"Tugallandi deb belgilash" tugmasi ProgressContext'dagi
+toggleLessonComplete() ni chaqiradi. Oldingi/keyingi dars
+tugmalari course.lessons massividagi indeksga qarab hisoblanadi.
+
+--- Favorites.js ---
+Foydalanuvchi yurak bosgan kurslarning ro'yxati.
+
+--- Login.js / Register.js ---
+Oddiy formalar. handleSubmit funksiyasi AuthContext'dagi
+login()/register() ni chaqiradi, muvaffaqiyatli bo'lsa
+navigate('/') bilan bosh sahifaga o'tkazadi.
+
+--- Admin.js ---
+Faqat role==="admin" bo'lgan foydalanuvchiga ko'rinadi (aks holda
+Navigate bilan bosh sahifaga qaytariladi). Kurs qo'shish/tahrirlash
+/o'chirish formasi bor. Har bir kurs ichida darslar ham qo'shiladi
+(alohida kichik forma orqali, "+ Dars qo'shish" tugmasi bilan
+lessons massiviga qo'shiladi).
+
+--- NotFound.js ---
+404 sahifa - App.js dagi "*" route unga olib boradi.
+
+
+=================================================================
+8. COMPONENTS - QAYTA ISHLATILADIGAN QISMLAR
+=================================================================
+
+--- Navbar.js ---
+Yuqori menyu. Ekran kengligiga qarab ikki xil ko'rinish (desktop
+uchun to'liq menyu, mobil uchun burger tugma). Tungi/kunduzgi
+rejim tugmasi ham shu yerda - bosilganda document.documentElement
+ga data-theme="dark" atributi qo'yiladi, CSS shu atributga qarab
+barcha ranglarni almashtiradi.
+
+--- CourseCard.js ---
+Har bir kurs kartochkasi (rasm, nom, narx, progress bar). Ham
+Home, ham Courses, ham Favorites sahifalarida ishlatiladi - shuning
+uchun alohida komponent qilib chiqarilgan (bir marta yozilib, ko'p
+joyda ishlatiladi - DRY prinsipi).
+
+--- Reveal.js ---
+Sahifa skroll qilinganda elementlar pastdan chiqib kelishi uchun.
+IntersectionObserver degan brauzer texnologiyasidan foydalanadi -
+element ekranga kirganda bir marta "ko'rindi" holatiga o'tadi.
+
+--- icons.js ---
+Barcha ikonkalar shu yerda SVG shaklida. Emoji ishlatilmagan,
+chunki emoji brauzerlarda turlicha ko'rinadi - SVG doim bir xil.
+
+
+=================================================================
+9. index.css - DIZAYN TIZIMI
+=================================================================
+
+Loyihada Tailwind ISHLATILMAYDI - hammasi qo'lda yozilgan oddiy
+CSS. Fayl boshida :root ichida "o'zgaruvchilar" (CSS custom
+properties) e'lon qilingan:
+
+  --color-primary: #0041c8;
+  --radius-lg: 1rem;
+  ...
+
+Butun faylda shu o'zgaruvchilar var(--color-primary) kabi
+ishlatiladi. Bu degani - agar rangni o'zgartirmoqchi bo'lsangiz,
+FAQAT bitta joyni o'zgartirasiz, butun saytda avtomatik yangilanadi.
+
+Tungi rejim ham shu tamoyilga asoslangan: [data-theme='dark']
+ichida XUDDI SHU o'zgaruvchilar boshqa qiymatlar bilan qayta
+e'lon qilingan. Boshqa hech qanday kod o'zgarmaydi - faqat
+o'zgaruvchilarning qiymati almashadi.
+
+
+=================================================================
+10. EHTIMOLIY SAVOLLAR VA QISQA JAVOBLAR
+=================================================================
+
+S: Nega Context ishlatilgan, prop emas?
+J: Chunki bir nechta uzoq komponent (Navbar, sahifalar) bir xil
+   ma'lumotni (masalan login holati) bilishi kerak. Prop bilan
+   uzatish uchun har bir oraliq komponentdan o'tkazib yurish kerak
+   bo'lardi - Context bu muammoni hal qiladi.
+
+S: JWT token nima?
+J: Login qilganda server bir marta shifrlangan "chipta" yaratadi
+   (foydalanuvchi ID va rolini o'z ichiga oladi). Har bir keyingi
+   so'rovda shu chipta yuboriladi, server uni tekshirib "bu haqiqatan
+   ham shu odam" deb ishonadi - parolni har safar qayta yuborish
+   shart emas.
+
+S: Nega ba'zi sahifalar backend'dan, ba'zilari local fayldan
+   ma'lumot oladi?
+J: Barcha sahifalar avval backend'ga murojaat qiladi. Agar backend
+   ishlamasa (masalan internet uzilsa), src/data/courses.js dagi
+   namuna ma'lumotga "zaxira" sifatida qaytadi - sayt butunlay
+   ishlamay qolmasligi uchun.
+
+S: useState va useEffect nima farqi bor?
+J: useState - komponent "eslab qoladigan" qiymat (masalan forma
+   maydoni). useEffect - komponent ekranga chiqqanda (yoki biror
+   qiymat o'zgarganda) avtomatik ishga tushadigan kod (masalan
+   backend'dan ma'lumot olish).
+
+S: Nima uchun ba'zi joyda "await" bor?
+J: fetch() so'rovi darhol javob bermaydi - internet orqali
+   backend'ga borib qaytishi vaqt oladi. "await" - "shu so'rov
+   tugagunча kut, keyin davom et" degani.
