@@ -1,276 +1,234 @@
 =================================================================
-OZODCODER — FRONTEND KODINI TUSHUNTIRISH
-(Taqdimot uchun tayyorgarlik - oddiy tilda)
+OZODCODER SAYTI QANDAY ISHLAYDI 
 =================================================================
 
-Bu fayl sizga frontend/src papkasidagi har bir qismning nima
-qilishini va NEGA shunday yozilganini tushuntiradi. Maqsad -
-o'qituvchi "bu yerda nima bo'lyapti?" deb so'raganda o'z
-so'zlaringiz bilan javob bera olishingiz.
+Tasavvur qiling: OzodCoder — bu katta O'YINCHOQLAR DO'KONI.
+Faqat o'yinchoq o'rniga u yerda KURSLAR sotiladi.
 
+Bu do'konda 3 ta joy bor:
 
-=================================================================
-1. KATTA RASM - LOYIHA QANDAY ISHLAYDI
-=================================================================
+  1. VITRINA (Frontend / React) — mijoz shu yerda ko'radi va bosadi.
+     Bu — Vercel'da turadi.
 
-Sizning ilovangiz 3 ta alohida qismdan iborat:
+  2. OMBOR XODIMI (Backend / Express) — vitrinadan so'rov kelsa,
+     omborga kirib kerakli narsani topib beradi.
+     Bu — Railway'da turadi.
 
-  [Brauzer - React]  <-- internet -->  [Server - Express]  <-- ma'lumot -->  [MongoDB]
-     Vercel'da                            Railway'da                          Atlas'da
+  3. OMBOR (Baza / MongoDB) — barcha kurslar shu yerda, katta
+     javonlarda saqlanadi.
+     Bu — MongoDB Atlas'da turadi.
 
-Frontend (React) FAQAT ko'rinishni chizadi va foydalanuvchi bilan
-gaplashadi. U hech qachon to'g'ridan-to'g'ri bazaga ulanmaydi -
-bu xavfsizlik uchun. Frontend har doim backendga "so'rov" (fetch)
-yuboradi, backend bazadan javob olib beradi.
+Mijoz (SIZ, brauzeringiz orqali) faqat VITRINA bilan gaplashadi.
+Mijoz hech qachon to'g'ridan-to'g'ri omborga kira olmaydi — bu
+xavfsiz emas (birov hammasini o'g'irlab ketishi mumkin). Shuning
+uchun har doim: Mijoz -> Vitrina -> Ombor xodimi -> Ombor.
 
-ODDIY MISOL: Siz "Kurslar" sahifasini ochasiz.
-  1. React sahifani chizadi (hozircha bo'sh)
-  2. useEffect ichida fetch('/api/courses') chaqiriladi
-  3. Backend MongoDB'dan kurslarni oladi, JSON qilib qaytaradi
-  4. React setAllCourses(data) bilan holatni yangilaydi
-  5. Sahifa qayta chiziladi - endi kurslar ko'rinadi
-
-
-=================================================================
-2. FAYLLAR QAYERDA VA NIMA UCHUN
-=================================================================
-
-frontend/src/
-  main.js          -> ilova shu yerdan boshlanadi (kirish nuqtasi)
-  App.js            -> qaysi URL qaysi sahifani ko'rsatishini belgilaydi
-  index.css          -> BARCHA dizayn (ranglar, oraliqlar, animatsiyalar)
-  data/courses.js    -> backend ishlamasa ishlatiladigan zaxira ma'lumot
-  api/               -> backendga so'rov yuboradigan funksiyalar
-  context/           -> butun ilova bo'ylab "umumiy xotira"
-  pages/             -> har bir sahifaning o'zi (Home, Kurslar, va h.k.)
-  components/        -> qayta ishlatiladigan kichik qismlar (Navbar, CourseCard)
+ODDIY MISOL: Siz "Kurslar" tugmasini bosasiz.
+  1. Vitrina (React) "bir daqiqa kutib turing" deydi (hali bo'sh)
+  2. Vitrina ombor xodimiga xat yozadi: "menga kurslar kerak!"
+     (bu xat — fetch('/api/courses') degan kod qatori)
+  3. Ombor xodimi omborga kirib, kurslarni topadi
+  4. Ombor xodimi kurslarni qaytarib beradi
+  5. Vitrina ularni chiroyli qilib joylashtiradi — endi ko'rinadi!
 
 
 =================================================================
-3. main.js - HAMMA NARSA SHU YERDAN BOSHLANADI
+1. QUTILAR (PAPKALAR) NIMA UCHUN KERAK
 =================================================================
 
-Bu fayl React ilovasini brauzerdagi <div id="root"> ichiga
-"o'rnatadi" (mount qiladi). U shuningdek 3 ta Context Provider
-bilan butun ilovani o'raydi:
+frontend/src papkasi ichida kichik quti (papka)lar bor, har birida
+o'z vazifasi bor odam ishlaydi:
 
-  <AuthProvider>       - kim login qilgan, degan ma'lumot
-    <FavoritesProvider> - sevimli kurslar ro'yxati
-      <ProgressProvider> - qaysi darslar tugallangan
-        <App />
-      </ProgressProvider>
-    </FavoritesProvider>
-  </AuthProvider>
-
-NEGA "Provider" kerak? Chunki masalan "foydalanuvchi login
-qilganmi?" degan ma'lumot Navbar'da HAM, Login sahifasida HAM,
-CourseDetail sahifasida HAM kerak. Agar Context bo'lmasa, bu
-ma'lumotni har bir komponentga qo'lda "prop" sifatida uzatib
-yurishga to'g'ri kelardi - juda noqulay. Context bitta joyda
-saqlaydi, istalgan komponent useAuth() chaqirib o'qiy oladi.
+  main.js       -> do'kon eshigini birinchi ochadigan odam
+  App.js         -> "qaysi eshikdan kirsangiz, qaysi xonaga
+                     tushasiz" degan yo'l ko'rsatuvchi
+  index.css       -> bo'yoqchi (hamma rang, shakl shu yerda)
+  data/courses.js -> zaxira ro'yxat (agar ombor bilan bog'lanish
+                     uzilib qolsa, shundan foydalaniladi)
+  api/            -> ombor xodimiga xat yozadigan kotib
+  context/        -> katta E'LON TAXTASI (hamma o'qiy oladi)
+  pages/          -> do'kondagi har bir XONA
+  components/     -> qayta ishlatiladigan LEGO BO'LAKCHALARI
 
 
 =================================================================
-4. App.js - YO'NALTIRISH (ROUTING)
+2. main.js — DO'KONNI ISHGA TUSHIRUVCHI ODAM
 =================================================================
 
-React Router kutubxonasi yordamida qaysi URL qaysi sahifani
-ko'rsatishini belgilaydi:
+Bu odam ertalab birinchi kelib do'konni ochadi. U shuningdek
+3 ta katta E'LON TAXTASINI (Context) devorga osib qo'yadi:
 
-  "/"                              -> Home.js (bosh sahifa)
-  "/kurslar"                       -> Courses.js (kurslar ro'yxati)
-  "/kurslar/:courseId"             -> CourseDetail.js (bitta kurs)
-  "/kurslar/:courseId/darslar/:id" -> Lesson.js (video dars)
-  "/sevimlilar"                    -> Favorites.js
-  "/kirish"                        -> Login.js
-  "/royxatdan-otish"               -> Register.js
-  "/admin"                         -> Admin.js
-  "*" (boshqa hammasi)             -> NotFound.js (404)
+  E'lon taxtasi 1: "Hozir kim do'konda, u mijozmi yoki xodimmi?"
+                    (AuthProvider — login ma'lumoti)
+  E'lon taxtasi 2: "Bu mijoz qaysi kurslarni yoqtiradi?"
+                    (FavoritesProvider — sevimlilar)
+  E'lon taxtasi 3: "Bu mijoz qaysi darsni ko'rib bo'lgan?"
+                    (ProgressProvider — progress)
 
-":courseId" kabi ":" bilan boshlanadigan qismlar - "parametr".
-Masalan "/kurslar/react-tailwind" ochilsa, courseId="react-tailwind"
-bo'ladi va CourseDetail.js buni useParams() orqali o'qiydi.
-
-
-=================================================================
-5. CONTEXT'LAR - "UMUMIY XOTIRA"
-=================================================================
-
---- AuthContext.js ---
-Login/register/logout mantiqi shu yerda. Muhim narsa:
-  - Login qilganda backend JWT TOKEN qaytaradi (bu - shifrlangan
-    "chipta", foydalanuvchi kimligini isbotlaydi)
-  - Token localStorage'ga saqlanadi (brauzer xotirasi, sahifa
-    yangilansa ham yo'qolmaydi)
-  - Har bir himoyalangan so'rovda bu token "Authorization" header
-    orqali backendga yuboriladi
-  - Sahifa yangilanganda /api/auth/me ga so'rov yuborib,
-    foydalanuvchi ma'lumoti (jumladan role - student/admin) qayta
-    tekshiriladi - shuning uchun admin qilingandan keyin oddiy
-    refresh yetarli, qayta login shart emas
-
---- FavoritesContext.js ---
-Sevimli kurslar ro'yxatini saqlaydi. "Optimistic update" degan
-narsa ishlatilgan: tugma bosilganda UI DARHOL yangilanadi (foiz
-o'ylab o'tirmasdan), keyin orqa fonda backendga so'rov ketadi.
-Agar login qilinmagan bo'lsa, faqat localStorage'da saqlanadi.
-
---- ProgressContext.js ---
-Qaysi darslar "tugallandi" deb belgilanganini saqlaydi. Shakli:
-  { "react-tailwind": { "l1": true, "l2": true }, ... }
-getCourseProgressPercent(courseId, jamiDarsSoni) funksiyasi
-foizni hisoblaydi: tugallangan darslar / jami darslar * 100.
+NEGA E'LON TAXTASI KERAK? Chunki bu ma'lumotlar do'konning KO'P
+xonasida kerak bo'ladi (Navbar'da ham, Login xonasida ham). Agar
+e'lon taxtasi bo'lmasa, har bir xonaga alohida qog'ozda yozib
+yuborish kerak bo'lardi — juda charchatadi. E'lon taxtasi bo'lsa,
+istalgan xona borib o'qib kelaveradi.
 
 
 =================================================================
-6. api/ PAPKASI - BACKEND BILAN GAPLASHISH
+3. App.js — YO'L KO'RSATUVCHI ODAM
 =================================================================
 
-Bu papkadagi fayllar faqat fetch() so'rovlarini o'rab beradi -
-boshqa hech narsa qilmaydi. Masalan api/courses.js:
+Bu odam eshik oldida turadi va qaysi yozuvli eshikdan kirsangiz,
+sizni qaysi xonaga olib borishini biladi:
 
-  export async function fetchCourses() {
-    const res = await fetch(`${BASE}/courses`)
-    return handleResponse(res)
-  }
-
-BASE o'zgaruvchisi muhim: local'da ishlaganda "/api" (Vite proxy
-orqali localhost:5000'ga yo'naltiriladi), lekin deploy qilingan
-saytda VITE_API_URL orqali to'g'ridan-to'g'ri Railway backend
-manziliga (https://ozodcoder-production.up.railway.app/api)
-yuboriladi. Buning sababi: Vercel'da proxy ishlamaydi, chunki u
-faqat statik fayllarni serve qiladi.
+  "/"                    -> Bosh xona (Home.js)
+  "/kurslar"              -> Kurslar xonasi (Courses.js)
+  "/kurslar/react-asos"   -> Bitta kurs xonasi (CourseDetail.js)
+  "/sevimlilar"           -> Sevimlilar xonasi (Favorites.js)
+  "/kirish"               -> Kirish xonasi (Login.js)
+  "/admin"                -> Faqat xodimlar xonasi (Admin.js)
+  (boshqa hamma narsa)    -> "Bunday xona yo'q" xonasi (NotFound.js)
 
 
 =================================================================
-7. HAR BIR SAHIFA NIMA QILADI
+4. E'LON TAXTALARI ICHIDA NIMA YOZILGAN
 =================================================================
 
---- Home.js ---
-Bosh sahifa: katta sarlavha (hero), statistikalar, mashhur
-kurslar, "Davom eting" (agar progress bo'lsa), "nega biz",
-va oxirida chaqiruv tugmasi. Sahifa ochilganda backend'dan
-haqiqiy kurslarni olishga harakat qiladi, muvaffaqiyatsiz
-bo'lsa data/courses.js dagi namuna ma'lumotga qaytadi.
+--- AuthContext.js (Kim kim ekanini biluvchi taxta) ---
+Siz "Kirish" tugmasini bossangiz, ombor xodimi sizga bitta maxsus
+QOG'OZ CHIPTA beradi (bu — JWT token). Bu chipta shuni isbotlaydi:
+"ha, bu haqiqatan ham SHU odam". Chiptani siz cho'ntagingizda
+saqlaysiz (localStorage). Keyingi safar biror narsa so'raganingizda,
+chiptani ko'rsatasiz — parolni qayta aytish shart emas.
 
---- Courses.js ---
-Barcha kurslar ro'yxati. useState orqali 2 ta filtr saqlanadi:
-activeCategory (tanlangan kategoriya) va query (qidiruv matni).
-.filter() funksiyasi shu ikkalasiga mos kelmagan kurslarni
-chiqarib tashlaydi. Login qilinmagan bo'lsa, ro'yxatdan o'tishga
-yo'naltiradi (Navigate komponenti orqali).
+--- FavoritesContext.js (Sevimlilar taxtasi) ---
+Yurak tugmasini bossangiz, DARHOL to'lib-toshib ko'rinadi (kutib
+o'tirmaysiz), keyin orqa fonda ombor xodimiga ham xabar boradi.
 
---- CourseDetail.js ---
-Bitta kursning to'liq ma'lumoti: tavsif, syllabus (darslar
-ro'yxati), sharhlar. Bu yerda ham sharh qoldirish formasi bor -
-5 ta yulduzcha tugmasi + izoh maydoni. Sharh yuborilganda backend
-avtomatik o'sha kursning umumiy reytingini qayta hisoblaydi.
-
---- Lesson.js ---
-Video dars sahifasi. YouTube video <iframe> orqali ko'rsatiladi.
-"Tugallandi deb belgilash" tugmasi ProgressContext'dagi
-toggleLessonComplete() ni chaqiradi. Oldingi/keyingi dars
-tugmalari course.lessons massividagi indeksga qarab hisoblanadi.
-
---- Favorites.js ---
-Foydalanuvchi yurak bosgan kurslarning ro'yxati.
-
---- Login.js / Register.js ---
-Oddiy formalar. handleSubmit funksiyasi AuthContext'dagi
-login()/register() ni chaqiradi, muvaffaqiyatli bo'lsa
-navigate('/') bilan bosh sahifaga o'tkazadi.
-
---- Admin.js ---
-Faqat role==="admin" bo'lgan foydalanuvchiga ko'rinadi (aks holda
-Navigate bilan bosh sahifaga qaytariladi). Kurs qo'shish/tahrirlash
-/o'chirish formasi bor. Har bir kurs ichida darslar ham qo'shiladi
-(alohida kichik forma orqali, "+ Dars qo'shish" tugmasi bilan
-lessons massiviga qo'shiladi).
-
---- NotFound.js ---
-404 sahifa - App.js dagi "*" route unga olib boradi.
+--- ProgressContext.js (Qancha o'rgandim taxtasi) ---
+Qaysi darslarni "tugatdim" deb belgilaganingizni eslab qoladi va
+foizini hisoblaydi: tugatgan darslar soni / jami darslar soni.
 
 
 =================================================================
-8. COMPONENTS - QAYTA ISHLATILADIGAN QISMLAR
+5. api/ QUTISI — KOTIB XATLARI
+=================================================================
+
+Bu qutidagi fayllar faqat XAT YOZADI (ombor xodimiga so'rov
+yuboradi), boshqa hech narsa qilmaydi. Masalan:
+
+  "Menga kurslar ro'yxatini bering" -> fetchCourses()
+  "Menga bitta kursni ko'rsating"   -> fetchCourseById()
+
+Xat qayerga yuborilishi ham muhim: uyda ishlaganda "yaqin ombor"ga
+(localhost:5000), lekin internetga chiqqanda "uzoq ombor"ga
+(Railway serveri) yuboriladi.
+
+
+=================================================================
+6. HAR BIR XONA (SAHIFA) NIMA QILADI
+=================================================================
+
+--- Home.js (Bosh xona) ---
+Katta yorqin taxta (sarlavha), statistika raqamlari, mashhur
+kurslar, va agar siz biror kursni boshlagan bo'lsangiz —
+"Davom eting" deb ko'rsatib turadi.
+
+--- Courses.js (Kurslar xonasi) ---
+Barcha kurslarni ko'rsatadi. Yuqorida tugmalar bor — "Frontend",
+"Backend" va h.k. — bosilganda faqat o'sha turdagi kurslar qoladi,
+qolganlari vaqtincha yashiriladi.
+
+--- CourseDetail.js (Bitta kurs xonasi) ---
+Kurs haqida hamma narsa: tavsif, darslar ro'yxati, va boshqa
+odamlarning fikrlari (sharhlar). Siz ham yulduzcha bosib o'z
+fikringizni qoldirishingiz mumkin.
+
+--- Lesson.js (Video dars xonasi) ---
+Videoni ko'rsatadi. "Tugatdim" tugmasini bossangiz, Progress
+taxtasiga yozib qo'yiladi.
+
+--- Favorites.js (Sevimlilar xonasi) ---
+Yurak bosgan kurslaringiz ro'yxati.
+
+--- Login.js / Register.js (Kirish xonalari) ---
+Ism-familiya, email, parol yozasiz — "Kirish" bossangiz, ombor
+xodimi tekshirib, sizga chipta (token) beradi.
+
+--- Admin.js (Faqat xodimlar xonasi) ---
+Bu yerga faqat "xodim" (admin) kira oladi. Bu yerda yangi kurs
+qo'shish, eskisini o'zgartirish yoki o'chirish mumkin.
+
+
+=================================================================
+7. LEGO BO'LAKCHALARI (COMPONENTS)
 =================================================================
 
 --- Navbar.js ---
-Yuqori menyu. Ekran kengligiga qarab ikki xil ko'rinish (desktop
-uchun to'liq menyu, mobil uchun burger tugma). Tungi/kunduzgi
-rejim tugmasi ham shu yerda - bosilganda document.documentElement
-ga data-theme="dark" atributi qo'yiladi, CSS shu atributga qarab
-barcha ranglarni almashtiradi.
+Do'konning yuqori qismidagi menyu. Oy/quyosh tugmasi bosilsa,
+butun do'kon tungi rangga o'tadi.
 
 --- CourseCard.js ---
-Har bir kurs kartochkasi (rasm, nom, narx, progress bar). Ham
-Home, ham Courses, ham Favorites sahifalarida ishlatiladi - shuning
-uchun alohida komponent qilib chiqarilgan (bir marta yozilib, ko'p
-joyda ishlatiladi - DRY prinsipi).
+Bitta kurs KARTOCHKASI (rasm + nom + narx). Bu kartochka bir
+marta yasaladi, keyin uni ko'p joyda (Bosh xona, Kurslar xonasi,
+Sevimlilar xonasi) qayta-qayta ishlatiladi — xuddi bitta Lego
+bo'lakchasini turli qurilishlarda ishlatgandek.
 
 --- Reveal.js ---
-Sahifa skroll qilinganda elementlar pastdan chiqib kelishi uchun.
-IntersectionObserver degan brauzer texnologiyasidan foydalanadi -
-element ekranga kirganda bir marta "ko'rindi" holatiga o'tadi.
+Sahifani pastga aylantirganingizda, narsalar sekin-asta
+"paydo bo'lib" chiqadi — xuddi pardani asta ochgandek.
 
 --- icons.js ---
-Barcha ikonkalar shu yerda SVG shaklida. Emoji ishlatilmagan,
-chunki emoji brauzerlarda turlicha ko'rinadi - SVG doim bir xil.
+Barcha kichik belgilar (yurak, yulduz, soat) shu yerda chizilgan.
 
 
 =================================================================
-9. index.css - DIZAYN TIZIMI
+8. index.css — BO'YOQCHI
 =================================================================
 
-Loyihada Tailwind ISHLATILMAYDI - hammasi qo'lda yozilgan oddiy
-CSS. Fayl boshida :root ichida "o'zgaruvchilar" (CSS custom
-properties) e'lon qilingan:
+Bu fayl butun do'konning RANGINI belgilaydi. Eng tepada ranglar
+ro'yxati bor, masalan:
 
-  --color-primary: #0041c8;
-  --radius-lg: 1rem;
-  ...
+  Asosiy rang = ko'k
 
-Butun faylda shu o'zgaruvchilar var(--color-primary) kabi
-ishlatiladi. Bu degani - agar rangni o'zgartirmoqchi bo'lsangiz,
-FAQAT bitta joyni o'zgartirasiz, butun saytda avtomatik yangilanadi.
+Butun do'konda "Asosiy rang" deb ishlatiladi. Agar bitta joyda
+rangni o'zgartirsangiz, BUTUN do'kon rangi o'zgaradi — chunki
+hamma joy shu bitta ro'yxatga qaraydi.
 
-Tungi rejim ham shu tamoyilga asoslangan: [data-theme='dark']
-ichida XUDDI SHU o'zgaruvchilar boshqa qiymatlar bilan qayta
-e'lon qilingan. Boshqa hech qanday kod o'zgarmaydi - faqat
-o'zgaruvchilarning qiymati almashadi.
+Tungi rejim ham xuddi shunday: kechqurun bo'lsa, xuddi shu
+ro'yxat BOSHQA ranglarga almashadi (ko'k o'rniga to'q ko'k va h.k.),
+lekin qolgan hamma narsa bir xil qoladi.
 
 
 =================================================================
-10. EHTIMOLIY SAVOLLAR VA QISQA JAVOBLAR
+9. SODDA SAVOL-JAVOBLAR (TAQDIMOT UCHUN)
 =================================================================
 
-S: Nega Context ishlatilgan, prop emas?
-J: Chunki bir nechta uzoq komponent (Navbar, sahifalar) bir xil
-   ma'lumotni (masalan login holati) bilishi kerak. Prop bilan
-   uzatish uchun har bir oraliq komponentdan o'tkazib yurish kerak
-   bo'lardi - Context bu muammoni hal qiladi.
+S: Context (e'lon taxtasi) nima uchun kerak?
+J: Chunki bir xil ma'lumot (masalan "kim login qilgan") ko'p
+   xonada kerak. E'lon taxtasi bo'lmasa, har safar qo'lda
+   olib yurish kerak bo'lardi.
 
-S: JWT token nima?
-J: Login qilganda server bir marta shifrlangan "chipta" yaratadi
-   (foydalanuvchi ID va rolini o'z ichiga oladi). Har bir keyingi
-   so'rovda shu chipta yuboriladi, server uni tekshirib "bu haqiqatan
-   ham shu odam" deb ishonadi - parolni har safar qayta yuborish
-   shart emas.
+S: JWT token (chipta) nima?
+J: Bu — do'kon sizga bergan maxsus qog'oz. Unda "bu odam kim"
+   degan ma'lumot yozilgan. Uni ko'rsatsangiz, parolni qayta
+   aytish shart emas.
 
-S: Nega ba'zi sahifalar backend'dan, ba'zilari local fayldan
-   ma'lumot oladi?
-J: Barcha sahifalar avval backend'ga murojaat qiladi. Agar backend
-   ishlamasa (masalan internet uzilsa), src/data/courses.js dagi
-   namuna ma'lumotga "zaxira" sifatida qaytadi - sayt butunlay
-   ishlamay qolmasligi uchun.
+S: useState nima?
+J: Bu — kichik yopishqoq qog'ozcha (sticky note). U bir narsani
+   ESLAB QOLADI, masalan siz forma maydoniga nima yozganingizni.
 
-S: useState va useEffect nima farqi bor?
-J: useState - komponent "eslab qoladigan" qiymat (masalan forma
-   maydoni). useEffect - komponent ekranga chiqqanda (yoki biror
-   qiymat o'zgarganda) avtomatik ishga tushadigan kod (masalan
-   backend'dan ma'lumot olish).
+S: useEffect nima?
+J: Bu — "xonaga kirishing bilan avtomatik ishla" degan buyruq.
+   Masalan, sahifa ochilishi bilan darhol ombor xodimiga xat
+   yuborish kerak bo'lsa, shu yerga yoziladi.
 
-S: Nima uchun ba'zi joyda "await" bor?
-J: fetch() so'rovi darhol javob bermaydi - internet orqali
-   backend'ga borib qaytishi vaqt oladi. "await" - "shu so'rov
-   tugagunча kut, keyin davom et" degani.
+S: try / catch nima?
+J: "Harakat qilib ko'r, agar chatoq chiqsa — yig'lama, shuni qil"
+   degani. Masalan: "omborga ulanishga harakat qil, agar
+   ulanmasa — dasturni to'xtat, lekin buzilib qolma."
+
+S: Nega ba'zan backend'dan, ba'zan mahalliy fayldan ma'lumot
+   olinadi?
+J: Har doim avval ombor xodimidan (backend) so'raladi. Agar
+   ombor xodimi javob bermasa (masalan internet uzilsa), zaxira
+   ro'yxatga (data/courses.js) qaraladi — shunda do'kon
+   BUTUNLAY yopilib qolmaydi.
